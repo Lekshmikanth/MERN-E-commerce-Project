@@ -1,0 +1,9 @@
+body{
+    margin-left: 240px !important;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        margin-left: 0px !important;
+    }
+  }

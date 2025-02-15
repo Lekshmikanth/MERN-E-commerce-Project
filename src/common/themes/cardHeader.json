@@ -1,0 +1,12 @@
+{
+    "MuiCardHeader": {
+        "styleOverrides": {
+            "root": {},
+            "title": {
+                "fontFamily": "Clash Display",
+                "fontSize": "22px",
+                "fontWeight": "500"
+            }
+        }
+    }
+}
