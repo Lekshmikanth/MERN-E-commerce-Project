@@ -20,6 +20,7 @@ function Input(props) {
             if (!digitsOnly) {
               handleChange(e);
             }
+            // eslint-disable-next-line no-mixed-operators
             if (digitsOnly && e.target.value === "" || regex.test(e.target.value.toLowerCase())) {
               handleChange(e);
             } else if (upperCase) {

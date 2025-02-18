@@ -10,7 +10,7 @@ const DrawerContent = ({menuItems}) => {
       <Toolbar><Typography component="h1">LOGO</Typography></Toolbar>
       <Divider />
       <List>
-        {menuItems[0]?.children?.map((item, index) => (
+        {menuItems[1]?.children?.map((item, index) => (
           <>
           <ListItem key={index} disablePadding>
             <ListItemButton sx={{"&:hover":{backgroundColor: "#1976d2"}}} onClick={() => navigate(item?.path)}>

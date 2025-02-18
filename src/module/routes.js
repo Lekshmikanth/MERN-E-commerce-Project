@@ -1,9 +1,20 @@
 import App from "../App";
 import RootBoundary from "../common/custom/RootBoundary";
-import {routes as categoryRoutes} from "../module/category/routes";
+import { routes as categoryRoutes } from "../module/category/routes";
 import Category from "./category/Home";
+import Login from "./register/login/components/Login";
 
 const routes = [
+    {
+        path: "/login",
+        element:
+            // <PrivateRoute>
+            // <Navigate>
+            <Login />,
+        // </Navigate>,
+        //  </PrivateRoute>,
+        errorElement: <RootBoundary />
+    },
     {
         path: "/",
         element: <App />,
@@ -19,4 +30,4 @@ const routes = [
         ]
     }
 ]
-export {routes};
+export { routes };
