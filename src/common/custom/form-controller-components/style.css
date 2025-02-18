@@ -1,0 +1,6 @@
+.formik-textarea:hover {
+  border: 1px solid #FF7400 !important;
+}
+.formik-textarea:focus {
+  border: 1px solid #FF7400 !important;
+}
