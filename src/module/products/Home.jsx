@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-function CategoryHome() {
+function ProductsHome() {
     return (
         <div>
             <Outlet />
@@ -8,4 +8,4 @@ function CategoryHome() {
     );
 }
 
-export default CategoryHome;
+export default ProductsHome;
