@@ -1,11 +1,11 @@
-import InnerPage from "./new/InnerPage";
-import NewPage from "./new/NewPage";
-import OldPage from "./old/OldPage";
+import InnerPage from "./shirts/InnerPage";
+import NewPage from "./shirts/NewPage";
+import OldPage from "./t-shirts/OldPage";
 
 const routes = [
     {
-    title: "new",
-    path: "new",
+    title: "Shirts",
+    path: "shirts",
     children: [
         {
             path: "",
@@ -19,8 +19,8 @@ const routes = [
     ]
 },
 {
-    title: "old",
-    path: "old",
+    title: "T-Shirts",
+    path: "t-shirts",
     element: <OldPage />
 }
 ]

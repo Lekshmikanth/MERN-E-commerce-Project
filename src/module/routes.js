@@ -1,7 +1,7 @@
 import App from "../App";
 import RootBoundary from "../common/custom/RootBoundary";
-import { routes as categoryRoutes } from "../module/category/routes";
-import Category from "./category/Home";
+import { routes as productRoutes } from "../module/products/routes";
+import Products from "./products/Home";
 import Login from "./register/login/components/Login";
 
 const routes = [
@@ -21,10 +21,10 @@ const routes = [
         errorElement: <RootBoundary />,
         children: [
             {
-                title: "Category",
-                path: "category",
-                element: <Category />,
-                children: categoryRoutes || [],
+                title: "Products",
+                path: "products",
+                element: <Products />,
+                children: productRoutes || [],
                 errorElement: <RootBoundary />
             }
         ]
