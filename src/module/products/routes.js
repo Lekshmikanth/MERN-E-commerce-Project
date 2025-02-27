@@ -4,25 +4,25 @@ import OldPage from "./t-shirts/OldPage";
 
 const routes = [
     {
-    title: "Shirts",
-    path: "shirts",
-    children: [
-        {
-            path: "",
-            element: <NewPage />
-        },
-        {
-            title: "innerpage",
-            path: "view",
-            element: <InnerPage />
-        }
-    ]
-},
-{
-    title: "T-Shirts",
-    path: "t-shirts",
-    element: <OldPage />
-}
+        title: "Shirts",
+        path: "shirts",
+        children: [
+            {
+                path: "",
+                element: <NewPage />
+            },
+            {
+                title: "innerpage",
+                path: "view",
+                element: <InnerPage />
+            }
+        ]
+    },
+    {
+        title: "T-Shirts",
+        path: "t-shirts",
+        element: <OldPage />
+    }
 ]
 
-export {routes};
+export { routes };

@@ -1,4 +1,4 @@
-import { Box, Grid, Hidden, IconButton, Typography } from "@mui/material";
+import { Box, Grid, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { Form, withFormik } from "formik";
@@ -66,7 +66,7 @@ function Login(props) {
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           <Grid container>
             <Grid item xs={12} sm={12} md={12} lg={12} xl={12} sx={{ justifyContent: "center", display: "flex", alignItems: "center" }} className="mainGrid" >
-              <img src={image} alt="" />
+              <img src={image} width="600px" alt="" />
             </Grid>
           </Grid>
         </Grid>
@@ -90,18 +90,13 @@ function Login(props) {
                       </Grid>
                     </Grid>
                     <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                      <Button id="button-Login" type="submit" className={classes.btn} >{I18n("login")} </Button>
+                      <Button id="button-Login" type="submit" className={classes.btn} >Login </Button>
                     </Box>
                   </Form>
                   <Typography className={classes.links} onClick={() => navigate("/Reset")}>Forgot Password?</Typography>
                 </Grid>
                 <Grid item xs={0} sm={0} md={3} lg={3} xl={3}></Grid>
               </Grid>
-              <Hidden lgDown>
-                <Grid item xs={1} sm={2} md={12} lg={12} xl={12} sx={{ height: "20vh" }}>
-                  <img id="login-image-Wave" src={"waveOrange"} alt="orange" width="100%" />
-                </Grid>
-              </Hidden>
             </Grid>
 
           </Grid>

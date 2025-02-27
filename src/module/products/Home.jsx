@@ -1,10 +1,13 @@
+import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 
 function ProductsHome() {
     return (
-        <div>
-            <Outlet />
-        </div>
+        <>
+            <Box sx={{ m: 2 }}>
+                <Outlet />
+            </Box>
+        </>
     );
 }
 
