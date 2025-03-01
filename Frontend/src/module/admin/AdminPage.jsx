@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from './apiService'; // Your dynamic API request function
+import './AdminPage.css';
 
 const AdminPage = () => {
     // State for managing products, new product data, and product updates
