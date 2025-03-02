@@ -8,6 +8,7 @@ const productRoutes = require('./routes/product');
 const userRoutes = require('./routes/user');
 const cartRoutes = require('./routes/cart');
 const config = require('./config');
+const path = require('path');
 
 const app = express();
 
@@ -40,6 +41,7 @@ mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: t
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
