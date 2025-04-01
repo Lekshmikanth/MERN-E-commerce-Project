@@ -1,80 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { apiRequest } from '../axios'; // Your dynamic API request function
+import React, { useState } from 'react';
+// import { apiRequest } from '../axios'; // Your dynamic API request function
 import './AdminPage.css';
 import ImageCompressor from 'browser-image-compression';
+import { useAddProductMutation, useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from '../apiSlice';
 
 
 const AdminPage = () => {
     // State for managing products, new product data, and product updates
-    const [products, setProducts] = useState([]);
+    // const [products, setProducts] = useState([]);
     const [newProduct, setNewProduct] = useState({ name: '', price: '', quantity: '', description: '', image: null });
-    const [editProduct, setEditProduct] = useState({ id: '', name: '', price: '', quantity: '', description: '', image: null });
+    const [editProduct, setEditProduct] = useState({ _id: '', name: '', price: '', quantity: '', description: '', image: null });
+    console.log("first", editProduct);
+    // const data = [{ _id: 1, name: 'Laptop', price: '1200', quantity: '3', description: 'Good condition', image: null }]
+    // const { data: products, error, isLoading } = useGetProductsQuery();
+    const { data: products } = useGetProductsQuery();
+    const [addProduct] = useAddProductMutation();
+    const [updateProduct] = useUpdateProductMutation();
+    const [deleteProduct] = useDeleteProductMutation();
 
-    // Fetch all products when the admin page loads
-    const fetchProducts = async () => {
-        try {
-            const data = await apiRequest('GET', '/products');
-            setProducts(data.products);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
+    const handleAddProduct = async () => {
+        await addProduct(newProduct);
     };
 
-    // Add a new product
-    const addProduct = async () => {
-        if (!newProduct.name || !newProduct.price || !newProduct.quantity || !newProduct.description || !newProduct.image) return;
+    const handleUpdate = async () => {
+        await updateProduct(editProduct);
+    };
 
-        const formData = new FormData();
-        formData.append('name', newProduct.name);
-        formData.append('price', newProduct.price);
-        formData.append('quantity', newProduct.quantity);
-        formData.append('description', newProduct.description);
-        formData.append('image', newProduct.image);  // Ensure the image field is correct
-
-        try {
-            const data = await apiRequest('POST', '/products/add', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-            setProducts((prev) => [...prev, data]);
-            setNewProduct({ name: '', price: '', quantity: '', description: '', image: null });
-            console.log('Product added:', data);
-        } catch (error) {
-            console.error('Error adding product:', error);
-        }
+    const handleDelete = async (id) => {
+        await deleteProduct(id);
     };
 
 
-    // Update an existing product
-    const updateProduct = async () => {
-        if (!editProduct.id || !editProduct.name || !editProduct.price || !editProduct.quantity || !editProduct.description || !editProduct.image) return;
-
-        const formData = new FormData();
-        formData.append('name', editProduct.name);
-        formData.append('price', editProduct.price);
-        formData.append('quantity', editProduct.quantity);
-        formData.append('description', editProduct.description);
-        formData.append('image', editProduct.image);
-
-        try {
-            const data = await apiRequest('PUT', `/products/edit/${editProduct.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-            setProducts((prev) =>
-                prev.map((product) => (product.id === editProduct.id ? data : product))
-            );
-            setEditProduct({ id: '', name: '', price: '', quantity: '', description: '', image: null });
-            console.log('Product updated:', data);
-        } catch (error) {
-            console.error('Error updating product:', error);
-        }
-    };
-
-    // Delete a product
-    const deleteProduct = async (id) => {
-        try {
-            await apiRequest('DELETE', `/products/delete/${id}`);
-            setProducts((prev) => prev.filter((product) => product.id !== id));
-            console.log('Product deleted');
-        } catch (error) {
-            console.error('Error deleting product:', error);
-        }
-    };
 
     const compressImage = async (file, setProduct) => {
         try {
@@ -97,10 +53,6 @@ const AdminPage = () => {
         }
     };
 
-    // Run fetchProducts on component mount
-    useEffect(() => {
-        fetchProducts();
-    }, []);
 
     return (
         <div>
@@ -143,18 +95,12 @@ const AdminPage = () => {
                         style={{ width: '100px', height: '100px' }}
                     />
                 )}
-                <button onClick={addProduct}>Add Product</button>
+                <button onClick={handleAddProduct}>Add Product</button>
             </div>
 
             {/* Edit Product Form */}
             <div>
                 <h3>Edit Product</h3>
-                <input
-                    type="text"
-                    placeholder="Product ID"
-                    value={editProduct.id}
-                    onChange={(e) => setEditProduct({ ...editProduct, id: e.target.value })}
-                />
                 <input
                     type="text"
                     placeholder="Product Name"
@@ -189,7 +135,7 @@ const AdminPage = () => {
                         style={{ width: '100px', height: '100px' }}
                     />
                 )}
-                <button onClick={updateProduct}>Update Product</button>
+                <button onClick={handleUpdate}>Update Product</button>
             </div>
 
             {/* List of Products */}
@@ -199,10 +145,10 @@ const AdminPage = () => {
                     {products?.map((product) => (
                         <li key={product?._id}>
                             <img src={`http://localhost:5000${product?.image}`} alt={product?.name} width="100" />
-                            <strong>{product?.name}</strong> - ${product.price}
+                            <strong>{product?.name}</strong> - ${product?.price}
                             <p>{product?.description}</p>
                             <p>Quantity: {product?.quantity}</p>
-                            <button onClick={() => deleteProduct(product?._id)}>Delete</button>
+                            <button onClick={() => handleDelete(product?._id)}>Delete</button>
                             <button onClick={() => setEditProduct(product)}>Edit</button>
                         </li>
                     ))}
