@@ -1,33 +1,35 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export const apiSlice = createApi({
+export const appSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api' }),
     tagTypes: ['Product'],
     endpoints: (builder) => ({
         getProducts: builder.query({
-            query: () => '/products',
+            query: (filter) => filter ? `/products?category=${filter}` : '/products',
             providesTags: ['Product'],
         }),
         addProduct: builder.mutation({
-            query: (newProduct) => ({
-                url: '/products',
+            query: (formData) => ({
+                url: '/products/add',
                 method: 'POST',
-                body: newProduct,
+                body: formData,
+                formData: true,
             }),
             invalidatesTags: ['Product'],
         }),
         updateProduct: builder.mutation({
-            query: (updatedproduct) => ({
-                url: `/products/${updatedproduct?._id}`,
+            query: (formData) => ({
+                url: `/products/edit/${formData?._id}`,
                 method: 'PUT',
-                body: updatedproduct,
+                body: formData,
+                formData: true,
             }),
             invalidatesTags: ['Product'],
         }),
         deleteProduct: builder.mutation({
             query: (id) => ({
-                url: `/products/${id}`,
+                url: `/products/delete/${id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['Product'],
@@ -40,4 +42,4 @@ export const {
     useAddProductMutation,
     useUpdateProductMutation,
     useDeleteProductMutation
-} = apiSlice;
+} = appSlice;

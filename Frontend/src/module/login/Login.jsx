@@ -6,12 +6,12 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { loginSchema } from "../validate";
 import "./Login.css";
 import { createStructuredSelector } from "reselect";
-import { FormController, I18n } from "../../../../common";
-import Button from "../../../../common/custom/Button";
-import image from "../../../../assets/images.jpeg"
+import Button from "../../common/custom/Button";
+import image from "../../assets/images.jpeg"
+import { loginSchema } from "./validate";
+import { FormController, I18n } from "../../common";
 
 const useStyles = makeStyles({
   btn: {

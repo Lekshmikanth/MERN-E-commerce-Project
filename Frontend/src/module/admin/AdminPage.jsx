@@ -2,24 +2,33 @@ import React, { useState } from 'react';
 // import { apiRequest } from '../axios'; // Your dynamic API request function
 import './AdminPage.css';
 import ImageCompressor from 'browser-image-compression';
-import { useAddProductMutation, useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from '../apiSlice';
+import { useAddProductMutation, useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from '../appSlice';
+import { MenuItem, TextField } from '@mui/material';
 
 
 const AdminPage = () => {
+    const categoryDropdown = [{ value: "Electronics", label: "Electronics" }, { value: "Mobiles", label: "Mobiles" }, { value: "Appliances", label: "Appliances" }];
     // State for managing products, new product data, and product updates
     // const [products, setProducts] = useState([]);
-    const [newProduct, setNewProduct] = useState({ name: '', price: '', quantity: '', description: '', image: null });
-    const [editProduct, setEditProduct] = useState({ _id: '', name: '', price: '', quantity: '', description: '', image: null });
-    console.log("first", editProduct);
+    const [newProduct, setNewProduct] = useState({ category: '', name: '', price: '', quantity: '', description: '', image: null });
+    const [editProduct, setEditProduct] = useState({ _id: '', category: '', name: '', price: '', quantity: '', description: '', image: null });
     // const data = [{ _id: 1, name: 'Laptop', price: '1200', quantity: '3', description: 'Good condition', image: null }]
     // const { data: products, error, isLoading } = useGetProductsQuery();
-    const { data: products } = useGetProductsQuery();
+    const { data: products = {} } = useGetProductsQuery();
     const [addProduct] = useAddProductMutation();
     const [updateProduct] = useUpdateProductMutation();
     const [deleteProduct] = useDeleteProductMutation();
 
     const handleAddProduct = async () => {
-        await addProduct(newProduct);
+        const formData = new FormData();
+        formData.append("category", newProduct.category);
+        formData.append("name", newProduct.name);
+        formData.append("price", newProduct.price);
+        formData.append("quantity", newProduct.quantity);
+        formData.append("description", newProduct.description);
+        formData.append("image", newProduct.image);
+
+        await addProduct(formData);
     };
 
     const handleUpdate = async () => {
@@ -55,12 +64,26 @@ const AdminPage = () => {
 
 
     return (
-        <div>
+        <div style={{ margin: "0px 20px" }}>
             <h2>Admin - Product Management</h2>
 
             {/* Add Product Form */}
             <div>
                 <h3>Add New Product</h3>
+                <TextField
+                    id="outlined-select-currency"
+                    select
+                    label="Select Category"
+                    helperText="Please select product category"
+                    sx={{ width: "300px" }}
+                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                >
+                    {categoryDropdown.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <input
                     type="text"
                     placeholder="Product Name"
@@ -101,6 +124,21 @@ const AdminPage = () => {
             {/* Edit Product Form */}
             <div>
                 <h3>Edit Product</h3>
+                <TextField
+                    id="outlined-select-currency"
+                    select
+                    label="Select Category"
+                    helperText="Please select product category"
+                    value={editProduct.category}
+                    sx={{ width: "300px" }}
+                    onChange={(e) => setEditProduct({ ...editProduct, category: e.target.value })}
+                >
+                    {categoryDropdown.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <input
                     type="text"
                     placeholder="Product Name"
@@ -130,7 +168,7 @@ const AdminPage = () => {
                 />
                 {editProduct.image && (
                     <img
-                        src={URL.createObjectURL(editProduct.image)}
+                        src={editProduct.image}
                         alt="preview"
                         style={{ width: '100px', height: '100px' }}
                     />
@@ -142,11 +180,12 @@ const AdminPage = () => {
             <div>
                 <h3>All Products</h3>
                 <ul>
-                    {products?.map((product) => (
-                        <li key={product?._id}>
-                            <img src={`http://localhost:5000${product?.image}`} alt={product?.name} width="100" />
+                    {products?.products?.length > 0 && products?.products?.map((product) => (
+                        <li key={product?._id} style={{ border: "none" }}>
+                            <img src={product?.image} alt={product?.name} width="100" />
                             <strong>{product?.name}</strong> - ${product?.price}
                             <p>{product?.description}</p>
+                            <p>Category: {product?.category}</p>
                             <p>Quantity: {product?.quantity}</p>
                             <button onClick={() => handleDelete(product?._id)}>Delete</button>
                             <button onClick={() => setEditProduct(product)}>Edit</button>

@@ -5,7 +5,7 @@ import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import DrawerContent from '../module/common/Drawer/DrawerContent';
 import Header from "../module/common/header/Header";
-import {routes} from "../module/routes";
+import { routes } from "../module/routes";
 
 const drawerWidth = 240;
 
@@ -68,7 +68,7 @@ function DashboardLayout(props) {
           }}
           open
         >
-          <DrawerContent menuItems={menuItems}/>
+          <DrawerContent menuItems={menuItems} />
         </Drawer>
       </Box>
       <Box

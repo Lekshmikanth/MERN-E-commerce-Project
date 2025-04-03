@@ -1,8 +1,9 @@
 import App from "../App";
 import RootBoundary from "../common/custom/RootBoundary";
 import { routes as productRoutes } from "../module/products/routes";
+import AdminPage from "./admin/AdminPage";
+import Login from "./login/Login";
 import Products from "./products/Home";
-import Login from "./register/login/components/Login";
 
 const routes = [
     {
@@ -21,8 +22,14 @@ const routes = [
         errorElement: <RootBoundary />,
         children: [
             {
+                title: "Admin",
+                path: "/admin",
+                element: <AdminPage />,
+                errorElement: <RootBoundary />,
+            },
+            {
                 title: "Products",
-                path: "products",
+                path: "/products",
                 element: <Products />,
                 children: productRoutes || [],
                 errorElement: <RootBoundary />

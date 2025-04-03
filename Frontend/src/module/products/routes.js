@@ -1,27 +1,22 @@
-import InnerPage from "./shirts/InnerPage";
-import NewPage from "./shirts/NewPage";
-import OldPage from "./t-shirts/OldPage";
+import { lazy } from "react";
+
+const CategorywiseListing = lazy(() => import("./CategorywiseListing/CategorywiseListing"));
 
 const routes = [
     {
-        title: "Shirts",
-        path: "shirts",
-        children: [
-            {
-                path: "",
-                element: <NewPage />
-            },
-            {
-                title: "innerpage",
-                path: "view",
-                element: <InnerPage />
-            }
-        ]
+        title: "Appliances",
+        path: "appliances",
+        element: <CategorywiseListing />
     },
     {
-        title: "T-Shirts",
-        path: "t-shirts",
-        element: <OldPage />
+        title: "Electronics",
+        path: "electronics",
+        element: <CategorywiseListing />
+    },
+    {
+        title: "Mobiles",
+        path: "mobiles",
+        element: <CategorywiseListing />
     }
 ]
 

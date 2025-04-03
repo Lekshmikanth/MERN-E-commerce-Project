@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { I18n } from "../../../common";
+import { I18n } from "../../common";
 
 export const passwordRegex = /^[0-9a-zA-Z#@.$_-]*$/;
 export const userNameRegex = /^[0-9a-zA-Z#@.$_-]*$/;
