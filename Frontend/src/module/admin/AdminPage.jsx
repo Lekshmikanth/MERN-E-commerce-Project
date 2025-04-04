@@ -1,80 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { apiRequest } from '../axios'; // Your dynamic API request function
+import React, { useState } from 'react';
+// import { apiRequest } from '../axios'; // Your dynamic API request function
 import './AdminPage.css';
 import ImageCompressor from 'browser-image-compression';
+import { useAddProductMutation, useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from '../appSlice';
+import { MenuItem, TextField } from '@mui/material';
 
 
 const AdminPage = () => {
+    const categoryDropdown = [{ value: "Electronics", label: "Electronics" }, { value: "Mobiles", label: "Mobiles" }, { value: "Appliances", label: "Appliances" }];
     // State for managing products, new product data, and product updates
-    const [products, setProducts] = useState([]);
-    const [newProduct, setNewProduct] = useState({ name: '', price: '', quantity: '', description: '', image: null });
-    const [editProduct, setEditProduct] = useState({ id: '', name: '', price: '', quantity: '', description: '', image: null });
+    // const [products, setProducts] = useState([]);
+    const [newProduct, setNewProduct] = useState({ category: '', name: '', price: '', quantity: '', description: '', image: null });
+    const [editProduct, setEditProduct] = useState({ _id: '', category: '', name: '', price: '', quantity: '', description: '', image: null });
+    // const data = [{ _id: 1, name: 'Laptop', price: '1200', quantity: '3', description: 'Good condition', image: null }]
+    // const { data: products, error, isLoading } = useGetProductsQuery();
+    const { data: products = {} } = useGetProductsQuery();
+    const [addProduct] = useAddProductMutation();
+    const [updateProduct] = useUpdateProductMutation();
+    const [deleteProduct] = useDeleteProductMutation();
 
-    // Fetch all products when the admin page loads
-    const fetchProducts = async () => {
-        try {
-            const data = await apiRequest('GET', '/products');
-            setProducts(data.products);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
-    };
-
-    // Add a new product
-    const addProduct = async () => {
-        if (!newProduct.name || !newProduct.price || !newProduct.quantity || !newProduct.description || !newProduct.image) return;
-
+    const handleAddProduct = async () => {
         const formData = new FormData();
-        formData.append('name', newProduct.name);
-        formData.append('price', newProduct.price);
-        formData.append('quantity', newProduct.quantity);
-        formData.append('description', newProduct.description);
-        formData.append('image', newProduct.image);  // Ensure the image field is correct
+        formData.append("category", newProduct.category);
+        formData.append("name", newProduct.name);
+        formData.append("price", newProduct.price);
+        formData.append("quantity", newProduct.quantity);
+        formData.append("description", newProduct.description);
+        formData.append("image", newProduct.image);
 
-        try {
-            const data = await apiRequest('POST', '/products/add', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-            setProducts((prev) => [...prev, data]);
-            setNewProduct({ name: '', price: '', quantity: '', description: '', image: null });
-            console.log('Product added:', data);
-        } catch (error) {
-            console.error('Error adding product:', error);
-        }
+        await addProduct(formData);
+    };
+
+    const handleUpdate = async () => {
+        await updateProduct(editProduct);
+    };
+
+    const handleDelete = async (id) => {
+        await deleteProduct(id);
     };
 
 
-    // Update an existing product
-    const updateProduct = async () => {
-        if (!editProduct.id || !editProduct.name || !editProduct.price || !editProduct.quantity || !editProduct.description || !editProduct.image) return;
-
-        const formData = new FormData();
-        formData.append('name', editProduct.name);
-        formData.append('price', editProduct.price);
-        formData.append('quantity', editProduct.quantity);
-        formData.append('description', editProduct.description);
-        formData.append('image', editProduct.image);
-
-        try {
-            const data = await apiRequest('PUT', `/products/edit/${editProduct.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-            setProducts((prev) =>
-                prev.map((product) => (product.id === editProduct.id ? data : product))
-            );
-            setEditProduct({ id: '', name: '', price: '', quantity: '', description: '', image: null });
-            console.log('Product updated:', data);
-        } catch (error) {
-            console.error('Error updating product:', error);
-        }
-    };
-
-    // Delete a product
-    const deleteProduct = async (id) => {
-        try {
-            await apiRequest('DELETE', `/products/delete/${id}`);
-            setProducts((prev) => prev.filter((product) => product.id !== id));
-            console.log('Product deleted');
-        } catch (error) {
-            console.error('Error deleting product:', error);
-        }
-    };
 
     const compressImage = async (file, setProduct) => {
         try {
@@ -97,18 +62,28 @@ const AdminPage = () => {
         }
     };
 
-    // Run fetchProducts on component mount
-    useEffect(() => {
-        fetchProducts();
-    }, []);
 
     return (
-        <div>
+        <div style={{ margin: "0px 20px" }}>
             <h2>Admin - Product Management</h2>
 
             {/* Add Product Form */}
             <div>
                 <h3>Add New Product</h3>
+                <TextField
+                    id="outlined-select-currency"
+                    select
+                    label="Select Category"
+                    helperText="Please select product category"
+                    sx={{ width: "300px" }}
+                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                >
+                    {categoryDropdown.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <input
                     type="text"
                     placeholder="Product Name"
@@ -143,18 +118,27 @@ const AdminPage = () => {
                         style={{ width: '100px', height: '100px' }}
                     />
                 )}
-                <button onClick={addProduct}>Add Product</button>
+                <button onClick={handleAddProduct}>Add Product</button>
             </div>
 
             {/* Edit Product Form */}
             <div>
                 <h3>Edit Product</h3>
-                <input
-                    type="text"
-                    placeholder="Product ID"
-                    value={editProduct.id}
-                    onChange={(e) => setEditProduct({ ...editProduct, id: e.target.value })}
-                />
+                <TextField
+                    id="outlined-select-currency"
+                    select
+                    label="Select Category"
+                    helperText="Please select product category"
+                    value={editProduct.category}
+                    sx={{ width: "300px" }}
+                    onChange={(e) => setEditProduct({ ...editProduct, category: e.target.value })}
+                >
+                    {categoryDropdown.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <input
                     type="text"
                     placeholder="Product Name"
@@ -184,25 +168,26 @@ const AdminPage = () => {
                 />
                 {editProduct.image && (
                     <img
-                        src={URL.createObjectURL(editProduct.image)}
+                        src={editProduct.image}
                         alt="preview"
                         style={{ width: '100px', height: '100px' }}
                     />
                 )}
-                <button onClick={updateProduct}>Update Product</button>
+                <button onClick={handleUpdate}>Update Product</button>
             </div>
 
             {/* List of Products */}
             <div>
                 <h3>All Products</h3>
                 <ul>
-                    {products?.map((product) => (
-                        <li key={product?._id}>
-                            <img src={`http://localhost:5000${product?.image}`} alt={product?.name} width="100" />
-                            <strong>{product?.name}</strong> - ${product.price}
+                    {products?.products?.length > 0 && products?.products?.map((product) => (
+                        <li key={product?._id} style={{ border: "none" }}>
+                            <img src={product?.image} alt={product?.name} width="100" />
+                            <strong>{product?.name}</strong> - ${product?.price}
                             <p>{product?.description}</p>
+                            <p>Category: {product?.category}</p>
                             <p>Quantity: {product?.quantity}</p>
-                            <button onClick={() => deleteProduct(product?._id)}>Delete</button>
+                            <button onClick={() => handleDelete(product?._id)}>Delete</button>
                             <button onClick={() => setEditProduct(product)}>Edit</button>
                         </li>
                     ))}

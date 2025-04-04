@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const SubMenu = ({menuItem}) => {
     const navigate = useNavigate();
-    console.log("second", menuItem);
     const path = menuItem?.path;
 
   return (

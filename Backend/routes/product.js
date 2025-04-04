@@ -22,16 +22,17 @@ const upload = multer({ storage: storage });
 
 // Add product route with image upload
 router.post('/add', upload.single('image'), async (req, res) => {
-    const { name, description, price, quantity } = req.body;
+    const { category, name, description, price, quantity } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;  // Use the file path to store in DB
 
     // Validate required fields
-    if (!name || !description || !price || !quantity || !imagePath) {
+    if (!category || !name || !description || !price || !quantity || !imagePath) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
     // Create a new product with the image path
     const product = new Product({
+        category,
         name,
         description,
         price,
@@ -50,7 +51,7 @@ router.post('/add', upload.single('image'), async (req, res) => {
 // Edit Product route
 router.put('/edit/:id', upload.single('image'), async (req, res) => {
     const { id } = req.params;
-    const { name, description, price, quantity } = req.body;
+    const { category, name, description, price, quantity } = req.body;
     let imagePath = req.body.image;  // If no new image, keep the old one
 
     if (req.file) {
@@ -60,7 +61,7 @@ router.put('/edit/:id', upload.single('image'), async (req, res) => {
     try {
         const product = await Product.findByIdAndUpdate(
             id,
-            { name, description, price, quantity, image: imagePath },
+            { category, name, description, price, quantity, image: imagePath },
             { new: true }
         );
         res.status(200).json({ message: 'Product updated', product });
@@ -83,9 +84,18 @@ router.delete('/delete/:id', async (req, res) => {
 
 // Get All Products
 router.get('/', async (req, res) => {
+    const { category } = req.query;
     try {
-        const products = await Product.find();
-        res.status(200).json({ products });
+        let query = {};
+
+        if (category) {
+            query.category = { $regex: category, $options: "i" }; // Case-insensitive search
+            const products = await Product.find(query);
+            res.status(200).json({ products });
+        } else {
+            const products = await Product.find();
+            res.status(200).json({ products });
+        }
     } catch (error) {
         res.status(400).json({ message: 'Failed to retrieve products', error });
     }

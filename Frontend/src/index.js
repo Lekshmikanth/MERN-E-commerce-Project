@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import PermittedRoutes from './PermittedRoutes';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
+import { AuthProvider } from './module/Authentication/AuthContext';
 // import { ThemeProvider } from '@mui/material';
 // import theme from "./common/themes/theme";
 
@@ -12,9 +13,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store} >
-      {/* <ThemeProvider theme={theme}> */}
-      <PermittedRoutes />
-      {/* </ThemeProvider> */}
+      <AuthProvider>
+        {/* <ThemeProvider theme={theme}> */}
+        <PermittedRoutes />
+        {/* </ThemeProvider> */}
+      </AuthProvider>
     </Provider>
   </React.StrictMode>
 );

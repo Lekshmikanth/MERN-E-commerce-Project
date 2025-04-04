@@ -6,6 +6,10 @@ import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import { Badge, IconButton } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CartDrawer from '../Drawer/CartDrawer';
+import { useLogoutUserMutation } from '../../appSlice';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../Authentication/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function Menu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -21,14 +25,28 @@ export default function Menu() {
     setDrawerOpen(!drawerOpen);
   };
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [logout] = useLogoutUserMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      dispatch(logoutUser());
+      navigate('/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
   return (
     <div>
       <IconButton color="inherit" onClick={toggleDrawer}>
         <Badge badgeContent={"0"} color="secondary">
           <ShoppingCartIcon />
-          <CartDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
         </Badge>
       </IconButton>
+      <CartDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
       <Button
         id="button"
         aria-controls={open ? 'basic-menu' : undefined}
@@ -49,7 +67,7 @@ export default function Menu() {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
       </BasicMenu>
     </div>
   );

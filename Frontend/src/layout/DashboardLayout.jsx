@@ -5,7 +5,7 @@ import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import DrawerContent from '../module/common/Drawer/DrawerContent';
 import Header from "../module/common/header/Header";
-import {routes} from "../module/routes";
+import { routes } from "../module/routes";
 
 const drawerWidth = 240;
 
@@ -31,7 +31,6 @@ function DashboardLayout(props) {
   };
 
 
-  // Remove this const when copying and pasting into your project.
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
@@ -43,7 +42,6 @@ function DashboardLayout(props) {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"
@@ -51,7 +49,7 @@ function DashboardLayout(props) {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
@@ -68,7 +66,7 @@ function DashboardLayout(props) {
           }}
           open
         >
-          <DrawerContent menuItems={menuItems}/>
+          <DrawerContent menuItems={menuItems} />
         </Drawer>
       </Box>
       <Box
