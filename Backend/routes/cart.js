@@ -3,6 +3,7 @@ const express = require('express');
 const Cart = require('../models/cart');
 const Product = require('../models/product');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 // Add to Cart
 router.post('/add', async (req, res) => {
@@ -33,8 +34,25 @@ router.post('/add', async (req, res) => {
     }
 });
 
+// Get all cart items for a user
+router.get('/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const cart = await Cart.findOne({ user: new mongoose.Types.ObjectId(userId) }).populate('products.product');
+        if (!cart) {
+            return res.status(200).json({ products: [] }); // empty cart fallback
+        }
+
+        res.status(200).json(cart);
+    } catch (error) {
+        res.status(400).json({ message: 'Failed to fetch cart', error });
+    }
+});
+
+
 // Remove from Cart
-router.delete('/remove', async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const { userId, productId } = req.body;
 
     try {

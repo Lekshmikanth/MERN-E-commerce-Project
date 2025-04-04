@@ -4,16 +4,12 @@ import { routes as productRoutes } from "../module/products/routes";
 import AdminPage from "./admin/AdminPage";
 import Login from "./login/Login";
 import Products from "./products/Home";
+import Register from "./register/Register";
 
 const routes = [
     {
         path: "/login",
-        element:
-            // <PrivateRoute>
-            // <Navigate>
-            <Login />,
-        // </Navigate>,
-        //  </PrivateRoute>,
+        element: <Login />,
         errorElement: <RootBoundary />
     },
     {
@@ -35,6 +31,11 @@ const routes = [
                 errorElement: <RootBoundary />
             }
         ]
-    }
+    },
+    {
+        path: "/register",
+        element: <Register />,
+        errorElement: <RootBoundary />
+    },
 ]
 export { routes };
