@@ -36,6 +36,6 @@ const routes = [
         path: "/register",
         element: <Register />,
         errorElement: <RootBoundary />
-    },
+    }
 ]
 export { routes };

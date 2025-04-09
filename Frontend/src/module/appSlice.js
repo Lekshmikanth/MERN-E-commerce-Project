@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const appSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api' }),
-    tagTypes: ['Product', 'Cart'],
+    tagTypes: ['Product', 'Cart', 'User'],
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (userData) => ({
@@ -25,6 +25,18 @@ export const appSlice = createApi({
                 method: 'GET',
             }),
         }),
+        getAllUsers: builder.query({
+            query: () => '/users/all',
+            providesTags: ['User'],
+        }),
+        makeUserAdmin: builder.mutation({
+            query: ({id, value}) => ({
+                url: `/users/make-admin/${id}`,
+                method: 'PUT',
+                body: {isAdmin: value}
+            }),
+            invalidatesTags: ['User'],
+        }),
         addToCart: builder.mutation({
             query: (cartData) => ({
                 url: '/cart/add',
@@ -34,7 +46,7 @@ export const appSlice = createApi({
             invalidatesTags: ['Cart'],
         }),
         deleteFromCart: builder.mutation({
-            query: ({userId, productId}) => ({
+            query: ({ userId, productId }) => ({
                 url: `/cart/delete`,
                 method: 'DELETE',
                 body: { userId, productId }
@@ -81,6 +93,8 @@ export const {
     useRegisterUserMutation,
     useLoginUserMutation,
     useLogoutUserMutation,
+    useGetAllUsersQuery,
+    useMakeUserAdminMutation,
     useAddToCartMutation,
     useDeleteFromCartMutation,
     useGetCartQuery,

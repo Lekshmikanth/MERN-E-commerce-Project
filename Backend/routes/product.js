@@ -22,7 +22,7 @@ const upload = multer({ storage: storage });
 
 // Add product route with image upload
 router.post('/add', upload.single('image'), async (req, res) => {
-    const { category, name, description, price, quantity } = req.body;
+    const { category, name, description, price, quantity, isTrending } = req.body;
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;  // Use the file path to store in DB
 
     // Validate required fields
@@ -37,7 +37,8 @@ router.post('/add', upload.single('image'), async (req, res) => {
         description,
         price,
         quantity,
-        image: imagePath  // Save the image path (not the buffer)
+        image: imagePath,  // Save the image path (not the buffer)
+        isTrending
     });
 
     try {
@@ -51,7 +52,7 @@ router.post('/add', upload.single('image'), async (req, res) => {
 // Edit Product route
 router.put('/edit/:id', upload.single('image'), async (req, res) => {
     const { id } = req.params;
-    const { category, name, description, price, quantity } = req.body;
+    const { category, name, description, price, quantity, isTrending } = req.body;
     let imagePath = req.body.image;  // If no new image, keep the old one
 
     if (req.file) {
@@ -61,7 +62,7 @@ router.put('/edit/:id', upload.single('image'), async (req, res) => {
     try {
         const product = await Product.findByIdAndUpdate(
             id,
-            { category, name, description, price, quantity, image: imagePath },
+            { category, name, description, price, quantity, image: imagePath, isTrending },
             { new: true }
         );
         res.status(200).json({ message: 'Product updated', product });
@@ -84,7 +85,7 @@ router.delete('/delete/:id', async (req, res) => {
 
 // Get All Products
 router.get('/', async (req, res) => {
-    const { category } = req.query;
+    const { category, isTrending } = req.query;
     try {
         let query = {};
 
@@ -92,7 +93,12 @@ router.get('/', async (req, res) => {
             query.category = { $regex: category, $options: "i" }; // Case-insensitive search
             const products = await Product.find(query);
             res.status(200).json({ products });
-        } else {
+        } 
+        else if(isTrending) {
+            query.isTrending = { $regex: isTrending, $options: "i" }; // Case-insensitive search
+            const products = await Product.find(query);
+            res.status(200).json({ products });
+        }else {
             const products = await Product.find();
             res.status(200).json({ products });
         }

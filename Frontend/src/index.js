@@ -6,6 +6,7 @@ import PermittedRoutes from './PermittedRoutes';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { AuthProvider } from './module/Authentication/AuthContext';
+import Notifications from './module/common/Notifications/Notifications';
 // import { ThemeProvider } from '@mui/material';
 // import theme from "./common/themes/theme";
 
@@ -14,9 +15,8 @@ root.render(
   <React.StrictMode>
     <Provider store={store} >
       <AuthProvider>
-        {/* <ThemeProvider theme={theme}> */}
+        <Notifications />
         <PermittedRoutes />
-        {/* </ThemeProvider> */}
       </AuthProvider>
     </Provider>
   </React.StrictMode>

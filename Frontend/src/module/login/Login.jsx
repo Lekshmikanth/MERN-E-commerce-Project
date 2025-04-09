@@ -130,6 +130,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../Authentication/AuthContext';
 import { useLoginUserMutation } from '../appSlice';
 import { useNavigate } from 'react-router-dom';
+import { notifyError, notifySuccess } from '../common/Notifications/constants';
 
 function Login() {
   const navigate = useNavigate();
@@ -142,11 +143,12 @@ function Login() {
       e.preventDefault();
       const res = await loginUser(form).unwrap();
       handleUserLogin(res);
-      if (res.message === "Login successful") {
+      if (res.user) {
+        notifySuccess("LoggedIn Successfully");
         navigate("/");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      notifyError("Login Failed");
     }
   };
 

@@ -7,11 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Cart from './Cart';
 
 const CartDrawer = ({ toggleDrawer, drawerOpen }) => {
-    // const cartItems = [
-    //     { id: 1, title: 'Laptop', price: '899.99', image: 'https://via.placeholder.com/50', quantity: 1 },
-    //     { id: 2, title: 'Smartphone', price: '499.99', image: 'https://via.placeholder.com/50', quantity: 1 },
-    //     { id: 3, title: 'Headphones', price: '149.99', image: 'https://via.placeholder.com/50', quantity: 1 },
-    // ]
+
     return (
         <>
             <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer} sx={{

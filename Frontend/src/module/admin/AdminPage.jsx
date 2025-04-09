@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-// import { apiRequest } from '../axios'; // Your dynamic API request function
 import './AdminPage.css';
 import ImageCompressor from 'browser-image-compression';
 import { useAddProductMutation, useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from '../appSlice';
-import { MenuItem, TextField } from '@mui/material';
-
+import { Button, Grid } from '@mui/material';
+import ProductListingTable from './ProductListingTable';
+import AddEditDialoge from './AddEditDialoge';
+import { notifyError, notifySuccess } from '../common/Notifications/constants';
+import { productInitialState } from './constants';
+import AdminUserManagement from './AdminUserManagement';
 
 const AdminPage = () => {
-    const categoryDropdown = [{ value: "Electronics", label: "Electronics" }, { value: "Mobiles", label: "Mobiles" }, { value: "Appliances", label: "Appliances" }];
-    // State for managing products, new product data, and product updates
-    // const [products, setProducts] = useState([]);
-    const [newProduct, setNewProduct] = useState({ category: '', name: '', price: '', quantity: '', description: '', image: null });
-    const [editProduct, setEditProduct] = useState({ _id: '', category: '', name: '', price: '', quantity: '', description: '', image: null });
-    // const data = [{ _id: 1, name: 'Laptop', price: '1200', quantity: '3', description: 'Good condition', image: null }]
-    // const { data: products, error, isLoading } = useGetProductsQuery();
+    const [product, setProduct] = useState(productInitialState);
+    const [addEditOpen, setAddEditOpen] = useState(false);
+    const [edit, setEdit] = useState(false);
+
     const { data: products = {} } = useGetProductsQuery();
     const [addProduct] = useAddProductMutation();
     const [updateProduct] = useUpdateProductMutation();
@@ -21,25 +21,57 @@ const AdminPage = () => {
 
     const handleAddProduct = async () => {
         const formData = new FormData();
-        formData.append("category", newProduct.category);
-        formData.append("name", newProduct.name);
-        formData.append("price", newProduct.price);
-        formData.append("quantity", newProduct.quantity);
-        formData.append("description", newProduct.description);
-        formData.append("image", newProduct.image);
+        formData.append("category", product.category);
+        formData.append("name", product.name);
+        formData.append("price", product.price);
+        formData.append("quantity", product.quantity);
+        formData.append("description", product.description);
+        formData.append("image", product.image);
+        formData.append("isTrending", product.isTrending);
 
-        await addProduct(formData);
+        try {
+            const result = await addProduct(formData);
+            if ("data" in result) {
+                notifySuccess("Product Added Successfully");
+                setProduct(productInitialState);
+                setAddEditOpen(false);
+            }
+        } catch {
+            notifyError("Failed To Add Product");
+        }
     };
 
     const handleUpdate = async () => {
-        await updateProduct(editProduct);
+        try {
+            const result = await updateProduct(product);
+            if ("data" in result) {
+                setAddEditOpen(false);
+                notifySuccess("Product Updated Successfully");
+                setProduct(productInitialState);
+            }
+        } catch (error) {
+            notifyError("Failed To Update Product");
+        }
     };
 
     const handleDelete = async (id) => {
-        await deleteProduct(id);
+        try {
+            await deleteProduct(id);
+            notifySuccess("Product deleted successfully");
+        } catch (error) {
+            notifyError("Failed to delete product");
+        }
     };
 
+    const handleClose = () => {
+        setAddEditOpen(!addEditOpen);
+        setProduct(productInitialState);
+    }
 
+    const handleAddNewProduct = () => {
+        setEdit(false);
+        setAddEditOpen(true);
+    };
 
     const compressImage = async (file, setProduct) => {
         try {
@@ -65,134 +97,13 @@ const AdminPage = () => {
 
     return (
         <div style={{ margin: "0px 20px" }}>
-            <h2>Admin - Product Management</h2>
-
-            {/* Add Product Form */}
-            <div>
-                <h3>Add New Product</h3>
-                <TextField
-                    id="outlined-select-currency"
-                    select
-                    label="Select Category"
-                    helperText="Please select product category"
-                    sx={{ width: "300px" }}
-                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                >
-                    {categoryDropdown.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-                <input
-                    type="text"
-                    placeholder="Product Name"
-                    value={newProduct.name}
-                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                />
-                <input
-                    type="text"
-                    placeholder="Price"
-                    value={newProduct.price}
-                    onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                />
-                <input
-                    type="number"
-                    placeholder="Quantity"
-                    value={newProduct.quantity}
-                    onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })}
-                />
-                <textarea
-                    placeholder="Description"
-                    value={newProduct.description}
-                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                />
-                <input
-                    type="file"
-                    onChange={(e) => handleImageChange(e, setNewProduct)}
-                />
-                {newProduct?.image && (
-                    <img
-                        src={URL.createObjectURL(newProduct?.image)}
-                        alt="preview"
-                        style={{ width: '100px', height: '100px' }}
-                    />
-                )}
-                <button onClick={handleAddProduct}>Add Product</button>
-            </div>
-
-            {/* Edit Product Form */}
-            <div>
-                <h3>Edit Product</h3>
-                <TextField
-                    id="outlined-select-currency"
-                    select
-                    label="Select Category"
-                    helperText="Please select product category"
-                    value={editProduct.category}
-                    sx={{ width: "300px" }}
-                    onChange={(e) => setEditProduct({ ...editProduct, category: e.target.value })}
-                >
-                    {categoryDropdown.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-                <input
-                    type="text"
-                    placeholder="Product Name"
-                    value={editProduct.name}
-                    onChange={(e) => setEditProduct({ ...editProduct, name: e.target.value })}
-                />
-                <input
-                    type="text"
-                    placeholder="Price"
-                    value={editProduct.price}
-                    onChange={(e) => setEditProduct({ ...editProduct, price: e.target.value })}
-                />
-                <input
-                    type="number"
-                    placeholder="Quantity"
-                    value={editProduct.quantity}
-                    onChange={(e) => setEditProduct({ ...editProduct, quantity: e.target.value })}
-                />
-                <textarea
-                    placeholder="Description"
-                    value={editProduct.description}
-                    onChange={(e) => setEditProduct({ ...editProduct, description: e.target.value })}
-                />
-                <input
-                    type="file"
-                    onChange={(e) => handleImageChange(e, setEditProduct)}
-                />
-                {editProduct.image && (
-                    <img
-                        src={editProduct.image}
-                        alt="preview"
-                        style={{ width: '100px', height: '100px' }}
-                    />
-                )}
-                <button onClick={handleUpdate}>Update Product</button>
-            </div>
-
-            {/* List of Products */}
-            <div>
-                <h3>All Products</h3>
-                <ul>
-                    {products?.products?.length > 0 && products?.products?.map((product) => (
-                        <li key={product?._id} style={{ border: "none" }}>
-                            <img src={product?.image} alt={product?.name} width="100" />
-                            <strong>{product?.name}</strong> - ${product?.price}
-                            <p>{product?.description}</p>
-                            <p>Category: {product?.category}</p>
-                            <p>Quantity: {product?.quantity}</p>
-                            <button onClick={() => handleDelete(product?._id)}>Delete</button>
-                            <button onClick={() => setEditProduct(product)}>Edit</button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            <h2 style={{marginTop: "10px"}}>Admin - Product Management</h2>
+            <Grid container sx={{ display: "flex", justifyContent: "end", margin: "15px 0px" }}>
+                <Button sx={{ backgroundColor: "#1976D2", color: "white", "&:hover": { backgroundColor: "#318eeb" } }} onClick={() => handleAddNewProduct()}>Add New Product</Button>
+            </Grid>
+            <ProductListingTable products={products?.products?.length > 0 ? products?.products : ""} setProduct={setProduct} setAddEditOpen={setAddEditOpen} handleDelete={handleDelete} setEdit={setEdit} />
+            <AddEditDialoge product={product} setProduct={setProduct} handleClose={handleClose} addEditOpen={addEditOpen} handleUpdate={handleUpdate} handleImageChange={handleImageChange} edit={edit} handleAddProduct={handleAddProduct} />
+            <AdminUserManagement />
         </div>
     );
 };
