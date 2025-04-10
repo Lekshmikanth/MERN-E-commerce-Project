@@ -30,10 +30,10 @@ export const appSlice = createApi({
             providesTags: ['User'],
         }),
         makeUserAdmin: builder.mutation({
-            query: ({id, value}) => ({
+            query: ({ id, value }) => ({
                 url: `/users/make-admin/${id}`,
                 method: 'PUT',
-                body: {isAdmin: value}
+                body: { isAdmin: value }
             }),
             invalidatesTags: ['User'],
         }),
@@ -58,7 +58,7 @@ export const appSlice = createApi({
             providesTags: ['Cart'],
         }),
         getProducts: builder.query({
-            query: (filter) => filter ? `/products?category=${filter}` : '/products',
+            query: ({ filterKey, filterValue }) => filterKey ? `/products?${filterKey}=${filterValue}` : '/products',
             providesTags: ['Product'],
         }),
         addProduct: builder.mutation({

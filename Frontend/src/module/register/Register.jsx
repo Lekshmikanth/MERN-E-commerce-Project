@@ -97,23 +97,13 @@ function Register() {
           <Container maxWidth="lg" >
             <Paper elevation={6} sx={{ borderRadius: 4, overflow: 'hidden' }}>
               <Grid item xs={12} md={6} width={"100%"}>
-                <Box
-                  sx={{
-                    p: 6,
-                    pt: 3,
-                    pb: 3,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    minHeight: '500px'
-                  }}
-                >
+                <Box sx={{ p: 6, pt: 1, pb: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '500px' }} >
                   <Typography component="h1" variant="h4" sx={{ fontWeight: 'bold' }}>
                     Create Account
                   </Typography>
                   <Box component="form" onSubmit={handleSubmit} margin={"30px"} >
                     <TextField
+                      size="small"
                       margin="normal"
                       required
                       fullWidth
@@ -129,6 +119,7 @@ function Register() {
                     />
 
                     <TextField
+                      size="small"
                       margin="normal"
                       required
                       fullWidth
@@ -144,6 +135,7 @@ function Register() {
                     />
 
                     <TextField
+                      size="small"
                       margin="normal"
                       required
                       fullWidth
@@ -173,6 +165,7 @@ function Register() {
                     />
 
                     <TextField
+                      size="small"
                       margin="normal"
                       required
                       fullWidth
@@ -220,6 +213,7 @@ function Register() {
                     <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 3 }}>
                       Already have an account?{' '}
                       <Typography
+                        onClick={() => navigate("/login")}
                         component="span"
                         color="primary"
                         sx={{

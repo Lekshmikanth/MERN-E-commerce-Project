@@ -18,43 +18,56 @@ const AddEditDialoge = (props) => {
             <Dialog open={addEditOpen} onClose={handleClose}>
                 <DialogTitle>{edit ? "Edit Product" : "Add New Product"}</DialogTitle>
                 <DialogContent sx={{ mt: -1 }}>
-                    <div style={{ marginTop: "10px" }}>
+                    <Grid sx={{ marginTop: "10px", justifyContent: "center", }}>
+                        <Grid item>
+                            <TextField
+                                id="outlined-select-currency"
+                                select
+                                label="Select Category"
+                                // helperText="Please select product category"
+                                value={product?.category}
+                                sx={{ width: "300px", mb: 2 }}
+                                onChange={(e) => setProduct({ ...product, category: e.target.value })}
+                            >
+                                {categoryDropdown?.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid >
+                            <TextField
+                                sx={{ width: "300px", mb: 2 }}
+                                variant="outlined"
+                                label="Product Name"
+                                value={product?.name}
+                                onChange={(e) => setProduct({ ...product, name: e.target.value })}
+                            />
+                        </Grid>
+
                         <TextField
-                            id="outlined-select-currency"
-                            select
-                            label="Select Category"
-                            // helperText="Please select product category"
-                            value={product?.category}
-                            sx={{ width: "300px" }}
-                            onChange={(e) => setProduct({ ...product, category: e.target.value })}
-                        >
-                            {categoryDropdown?.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <input
-                            type="text"
-                            placeholder="Product Name"
-                            value={product?.name}
-                            onChange={(e) => setProduct({ ...product, name: e.target.value })}
-                        />
-                        <input
-                            type="text"
-                            placeholder="Price"
+                            sx={{ width: "300px", mb: 2 }}
+                            variant="outlined"
+                            label="Price"
+                            type="number"
                             value={product?.price}
                             onChange={(e) => setProduct({ ...product, price: e.target.value })}
                         />
-                        <Grid display={"flex"}>
-                            <input
-                                width={"30px"}
+                        <Grid sx={{ display: "flex", mb: 2 }}>
+                            <TextField
                                 type="number"
-                                placeholder="Quantity"
+                                label="Qty"
                                 value={product?.quantity}
                                 onChange={(e) => setProduct({ ...product, quantity: e.target.value })}
+                                variant="outlined"
+                                size="small"
+                                sx={{ width: "70px" }}
+                                InputProps={{
+                                    inputProps: { min: 1 }
+                                }}
                             />
-                            <FormControlLabel
+                            <FormControlLabel sx={{ ml: 2, color: "#6b6866" }}
                                 control={
                                     <Checkbox
                                         name="isTrending"
@@ -65,11 +78,17 @@ const AddEditDialoge = (props) => {
                                 label="Trending"
                             />
                         </Grid>
-                        <textarea
-                            placeholder="Description"
-                            value={product?.description}
-                            onChange={(e) => setProduct({ ...product, description: e.target.value })}
-                        />
+                        <Grid>
+                            <TextField
+                                label="Description"
+                                multiline
+                                minRows={1}
+                                value={product?.description}
+                                onChange={(e) => setProduct({ ...product, description: e.target.value })}
+                                variant="outlined"
+                                sx={{ width: "300px" }}
+                            />
+                        </Grid>
                         <Grid display={"flex"}>
                             <input
                                 type="file"
@@ -88,13 +107,13 @@ const AddEditDialoge = (props) => {
                                 />
                             )}
                         </Grid>
-                    </div>
+                    </Grid>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{ mr: 2 }}>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button variant="contained" onClick={handleAddUpdate}>{edit ? "Update" : "Add"}</Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
         </>
     )
 }

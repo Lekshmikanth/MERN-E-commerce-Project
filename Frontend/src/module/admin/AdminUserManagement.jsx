@@ -10,12 +10,15 @@ const AdminUserManagement = () => {
     const [makeUserAdmin] = useMakeUserAdminMutation();
 
     const handleMakeUserAdmin = async (id, value) => {
-        console.log("value", value);
         try {
             await makeUserAdmin({ id, value });
-            notifySuccess("User promoted to admin")
+            if (value === true) {
+                notifySuccess("User promoted to Admin")
+            } else{
+                notifySuccess("Admin assigned to User")
+            }
         } catch {
-            notifyError("Failed to make user admin");
+            notifyError("Failed to make user Admin");
         }
     };
 
@@ -40,6 +43,7 @@ const AdminUserManagement = () => {
                     ) : (
                         <Chip label="User" color="default" />
                     ),
+                size: 100
             },
             {
                 accessorKey: 'actions',
@@ -52,6 +56,7 @@ const AdminUserManagement = () => {
                         ) : (<Button size="small" variant="contained" onClick={() => handleMakeUserAdmin(user._id, false)} > Make User </Button>)
                     );
                 },
+                size: 100
             }
 
         ],
@@ -66,6 +71,7 @@ const AdminUserManagement = () => {
 
     return (
         <>
+            <h2 style={{ margin: "10px 0px" }}>Admin - User Management</h2>
             <MaterialReactTable
                 table={table}
                 state={{ isLoading }}

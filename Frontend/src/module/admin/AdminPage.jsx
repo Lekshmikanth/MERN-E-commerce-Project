@@ -14,7 +14,7 @@ const AdminPage = () => {
     const [addEditOpen, setAddEditOpen] = useState(false);
     const [edit, setEdit] = useState(false);
 
-    const { data: products = {} } = useGetProductsQuery();
+    const { data: products = {} } = useGetProductsQuery({});
     const [addProduct] = useAddProductMutation();
     const [updateProduct] = useUpdateProductMutation();
     const [deleteProduct] = useDeleteProductMutation();

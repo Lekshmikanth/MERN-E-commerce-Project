@@ -20,7 +20,7 @@ const Breadcrumb = () => {
     let breadcrumbsLength = breadcrumbs.length;
     return < Stack direction="row" spacing={1} sx={{ m: 2 }}>
         <Breadcrumbs sx={{ borderBottom: "none" }} separator={<NavigateNext fontSize="small" />}>
-            {breadcrumbs.map(({ match, breadcrumb }, index) => {
+            {breadcrumbs?.map(({ match, breadcrumb }, index) => {
                 const { route: { icon = null } = {}, pathname = "/", params } = match;
                 let newpathName = pathname;
                 let pathLength = _.size(params);

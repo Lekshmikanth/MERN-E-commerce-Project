@@ -7,12 +7,13 @@ const CategorywiseListing = () => {
     const location = useLocation();
     const splitPath = location.pathname.split('/');
     const lastWord = splitPath[2];
-    const category = lastWord.charAt(0).toUpperCase() + lastWord.slice(1);
-    const { data: products = {} } = useGetProductsQuery(category);
+    const filterKey = "category";
+    const filterValue = lastWord.charAt(0).toUpperCase() + lastWord.slice(1);
+    const { data: products = {} } = useGetProductsQuery({filterKey, filterValue});
 
     return (
         <>
-            <ProductListing products={products?.products} category={category} />
+            <ProductListing products={products?.products} title={filterValue} />
         </>
     )
 }

@@ -2,9 +2,9 @@ import { Card, CardContent, CardMedia, Button, Typography, Grid } from '@mui/mat
 import React from 'react'
 import { useAddToCartMutation } from '../appSlice';
 import { useSelector } from 'react-redux';
-import { notifyError, notifySuccess } from '../common/Notifications/constants';
+import { notifyError, notifySuccess, notifyWarn } from '../common/Notifications/constants';
 
-const ProductListing = ({ products, category }) => {
+const ProductListing = ({ products, title }) => {
 
     const { user } = useSelector((state) => state.auth);
     const [addToCart] = useAddToCartMutation();
@@ -12,7 +12,7 @@ const ProductListing = ({ products, category }) => {
     const handleAddToCart = async (product) => {
 
         try {
-            if (!user) return alert('Please login first');
+            if (!user) return notifyWarn('Please login first');
             await addToCart({
                 userId: user?._id,
                 productId: product?._id,
@@ -29,7 +29,7 @@ const ProductListing = ({ products, category }) => {
         <>
             <Grid container>
                 <Grid sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-                    <Typography>{category}</Typography>
+                    <Typography>{title}</Typography>
                 </Grid>
             </Grid>
             <Grid container spacing={2}>

@@ -93,12 +93,12 @@ router.get('/', async (req, res) => {
             query.category = { $regex: category, $options: "i" }; // Case-insensitive search
             const products = await Product.find(query);
             res.status(200).json({ products });
-        } 
-        else if(isTrending) {
-            query.isTrending = { $regex: isTrending, $options: "i" }; // Case-insensitive search
+        }
+        else if (isTrending) {
+            query.isTrending = isTrending === 'true';
             const products = await Product.find(query);
             res.status(200).json({ products });
-        }else {
+        } else {
             const products = await Product.find();
             res.status(200).json({ products });
         }
