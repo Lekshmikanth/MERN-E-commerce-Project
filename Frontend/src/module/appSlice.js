@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const appSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api' }),
-    tagTypes: ['Product', 'Cart'],
+    tagTypes: ['Product', 'Cart', 'User', 'Category'],
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (userData) => ({
@@ -25,6 +25,18 @@ export const appSlice = createApi({
                 method: 'GET',
             }),
         }),
+        getAllUsers: builder.query({
+            query: () => '/users/all',
+            providesTags: ['User'],
+        }),
+        makeUserAdmin: builder.mutation({
+            query: ({ id, value }) => ({
+                url: `/users/make-admin/${id}`,
+                method: 'PUT',
+                body: { isAdmin: value }
+            }),
+            invalidatesTags: ['User'],
+        }),
         addToCart: builder.mutation({
             query: (cartData) => ({
                 url: '/cart/add',
@@ -34,7 +46,7 @@ export const appSlice = createApi({
             invalidatesTags: ['Cart'],
         }),
         deleteFromCart: builder.mutation({
-            query: ({userId, productId}) => ({
+            query: ({ userId, productId }) => ({
                 url: `/cart/delete`,
                 method: 'DELETE',
                 body: { userId, productId }
@@ -46,7 +58,7 @@ export const appSlice = createApi({
             providesTags: ['Cart'],
         }),
         getProducts: builder.query({
-            query: (filter) => filter ? `/products?category=${filter}` : '/products',
+            query: ({ filterKey, filterValue }) => filterKey ? `/products?${filterKey}=${filterValue}` : '/products',
             providesTags: ['Product'],
         }),
         addProduct: builder.mutation({
@@ -74,6 +86,35 @@ export const appSlice = createApi({
             }),
             invalidatesTags: ['Product'],
         }),
+        getCategories: builder.query({
+            query: () => '/categories',
+            providesTags: ['Category'],
+        }),
+        createCategory: builder.mutation({
+            query: (formData) => ({
+                url: '/categories/add',
+                method: 'POST',
+                body: formData,
+                formData: true,
+            }),
+            invalidatesTags: ['Category'],
+        }),
+        updateCategory: builder.mutation({
+            query: ({ id, formData }) => ({
+                url: `/categories/${id}`,
+                method: 'PUT',
+                body: formData,
+                formData: true,
+            }),
+            invalidatesTags: ['Category'],
+        }),
+        deleteCategory: builder.mutation({
+            query: (id) => ({
+                url: `/categories/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Category'],
+        }),
     }),
 });
 
@@ -81,11 +122,17 @@ export const {
     useRegisterUserMutation,
     useLoginUserMutation,
     useLogoutUserMutation,
+    useGetAllUsersQuery,
+    useMakeUserAdminMutation,
     useAddToCartMutation,
     useDeleteFromCartMutation,
     useGetCartQuery,
     useGetProductsQuery,
     useAddProductMutation,
     useUpdateProductMutation,
-    useDeleteProductMutation
+    useDeleteProductMutation,
+    useGetCategoriesQuery,
+    useCreateCategoryMutation,
+    useUpdateCategoryMutation,
+    useDeleteCategoryMutation
 } = appSlice;

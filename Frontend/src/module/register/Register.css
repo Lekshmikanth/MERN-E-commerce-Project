@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@media screen and (min-width: 600px) {
+    .container {
+        margin-left: -240px;
+    }
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* .leftBox {
+    height: 100%;
+    width: 60vw;
+    background-image: url("../../assets/shoppingCart.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 500px;
+} */
+
+.rightBox {
+    padding: 20px;
+    width: 600px;
+}

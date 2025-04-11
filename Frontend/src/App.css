@@ -1,4 +1,4 @@
-body{
+body {
     margin-left: 240px !important;
 }
 
@@ -6,4 +6,32 @@ body{
     body {
         margin-left: 0px !important;
     }
-  }
+}
+
+/* Works for Chrome, Edge, Safari */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+    /* This hides the arrows */
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #bbb transparent;
+}

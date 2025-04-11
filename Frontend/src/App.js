@@ -6,10 +6,10 @@ import DashboardLayout from './layout/DashboardLayout';
 function App() {
   return (
     <>
-    <Typography className="app" component="div">
-      <DashboardLayout />
-      <Outlet />
-    </Typography>
+      <Typography className="app" component="div">
+        <DashboardLayout />
+        <Outlet />
+      </Typography>
     </>
   );
 }

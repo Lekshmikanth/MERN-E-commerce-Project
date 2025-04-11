@@ -2,6 +2,7 @@ import App from "../App";
 import RootBoundary from "../common/custom/RootBoundary";
 import { routes as productRoutes } from "../module/products/routes";
 import AdminPage from "./admin/AdminPage";
+import HomePage from "./HomePage";
 import Login from "./login/Login";
 import Products from "./products/Home";
 import Register from "./register/Register";
@@ -18,10 +19,16 @@ const routes = [
         errorElement: <RootBoundary />,
         children: [
             {
+                title: "Home",
+                path: "/",
+                element: <HomePage />,
+                errorElement: <RootBoundary />
+            },
+            {
                 title: "Admin",
                 path: "/admin",
                 element: <AdminPage />,
-                errorElement: <RootBoundary />,
+                errorElement: <RootBoundary />
             },
             {
                 title: "Products",
@@ -36,6 +43,6 @@ const routes = [
         path: "/register",
         element: <Register />,
         errorElement: <RootBoundary />
-    },
+    }
 ]
 export { routes };

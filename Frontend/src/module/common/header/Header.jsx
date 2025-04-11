@@ -13,7 +13,7 @@ const Header = (props) => {
           <MenuIcon />
         </IconButton>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-          <Typography variant="h6" noWrap component="div"> Welcome </Typography>
+          <Typography variant="h6" noWrap component="div">Shopping Zone</Typography>
           <Breadcrumb />
           <Menu />
         </Box>
