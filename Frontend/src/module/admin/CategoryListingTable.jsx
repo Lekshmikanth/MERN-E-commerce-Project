@@ -3,7 +3,7 @@ import { useCreateCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQ
 // import { notifyError, notifySuccess } from '../common/Notifications/constants';
 import ImageCompressor from 'browser-image-compression';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Grid, IconButton } from '@mui/material';
+import { Button, Grid, IconButton } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CategoryAddEdit from './CategoryAddEdit';
@@ -14,32 +14,26 @@ const CategoryListingTable = () => {
     const [createCategory] = useCreateCategoryMutation();
     const [updateCategory] = useUpdateCategoryMutation();
     const [deleteCategory] = useDeleteCategoryMutation();
-    const [form, setForm] = useState({ categoryName: '', image: null, id: null });
+    const [form, setForm] = useState({ name: '', image: null });
     const [openDialog, setOpenDialog] = useState(false);
     const [edit, setEdit] = useState(false);
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
-
-    const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        if (name === "image") {
-            setForm((prev) => ({ ...prev, image: files[0] }));
-        } else {
-            setForm((prev) => ({ ...prev, [name]: value }));
-        }
-    };
 
     const onConfirm = () => {
         handleDelete(id);
         setOpen(false);
     };
 
+    const handleAddNewCategory = () => {
+        setOpenDialog(true);
+        setEdit(false);
+    };
+
     const handleSubmit = async () => {
         const formData = new FormData();
-        formData.append("name", form.categoryName);
-        if (form.image) {
-            formData.append("image", form.image);
-        }
+        formData.append("name", form.name);
+        formData.append("image", form.image);
 
         try {
             if (edit) {
@@ -67,7 +61,7 @@ const CategoryListingTable = () => {
         }
     };
 
-    const compressImage = async (file, setProduct) => {
+    const compressImage = async (file, setForm) => {
         try {
             const options = {
                 maxSizeMB: 1,
@@ -75,16 +69,16 @@ const CategoryListingTable = () => {
                 useWebWorker: true,
             };
             const compressedFile = await ImageCompressor(file, options);
-            setProduct((prevProduct) => ({ ...prevProduct, image: compressedFile }));
+            setForm((prevProduct) => ({ ...prevProduct, image: compressedFile }));
         } catch (error) {
             console.error("Image compression failed", error);
         }
     };
     // Handle image file selection
-    const handleImageChange = (e, setProduct) => {
+    const handleImageChange = (e, setForm) => {
         const file = e.target.files[0];
         if (file) {
-            compressImage(file, setProduct);
+            compressImage(file, setForm);
         }
     };
 
@@ -102,7 +96,7 @@ const CategoryListingTable = () => {
                 size: 100,
             },
             {
-                accessorKey: 'categoryName',
+                accessorKey: 'name',
                 header: 'Category Name',
                 size: 100,
             },
@@ -135,8 +129,11 @@ const CategoryListingTable = () => {
     return (
         <>
             <h2 style={{ margin: "10px 0px" }}>Admin - Category Management</h2>
+            <Grid container sx={{ display: "flex", justifyContent: "end", margin: "15px 0px" }}>
+                <Button sx={{ backgroundColor: "#1976D2", color: "white", "&:hover": { backgroundColor: "#318eeb" } }} onClick={() => handleAddNewCategory()}>Add New Category</Button>
+            </Grid>
             <MaterialReactTable table={table} />
-            <CategoryAddEdit openDialog={openDialog} setOpenDialog={setOpenDialog} edit={edit} setEdit={setEdit} handleChange={handleChange} handleSubmit={handleSubmit} handleImageChange={handleImageChange} />
+            <CategoryAddEdit form={form} setForm={setForm} openDialog={openDialog} setOpenDialog={setOpenDialog} edit={edit} setEdit={setEdit} handleSubmit={handleSubmit} handleImageChange={handleImageChange} />
             <ConfirmDialog
                 open={open}
                 onClose={() => setOpen(false)}

@@ -3,14 +3,21 @@ const multer = require('multer');
 const Category = require('../models/category')
 const router = express.Router();
 
+// Multer setup: save images to the 'uploads' folder
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'uploads/'),
-    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname),
+    destination: (req, file, cb) => {
+        const uploadPath = path.join(__dirname, '../uploads');
+        cb(null, uploadPath);  // Directory where images will be saved
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));  // Save image with a unique name
+    }
 });
-const upload = multer({ storage });
+
+const upload = multer({ storage: storage });
 
 // Create category
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/add', upload.single('image'), async (req, res) => {
     const { name } = req.body;
     const image = req.file?.path;
     const category = new Category({ name, image });

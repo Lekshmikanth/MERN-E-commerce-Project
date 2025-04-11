@@ -92,9 +92,10 @@ export const appSlice = createApi({
         }),
         createCategory: builder.mutation({
             query: (formData) => ({
-                url: '/categories',
+                url: '/categories/add',
                 method: 'POST',
                 body: formData,
+                formData: true,
             }),
             invalidatesTags: ['Category'],
         }),
@@ -103,6 +104,7 @@ export const appSlice = createApi({
                 url: `/categories/${id}`,
                 method: 'PUT',
                 body: formData,
+                formData: true,
             }),
             invalidatesTags: ['Category'],
         }),
