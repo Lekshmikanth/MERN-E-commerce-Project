@@ -7,8 +7,6 @@ import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { AuthProvider } from './module/Authentication/AuthContext';
 import Notifications from './module/common/Notifications/Notifications';
-// import { ThemeProvider } from '@mui/material';
-// import theme from "./common/themes/theme";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

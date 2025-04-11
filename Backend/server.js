@@ -7,6 +7,7 @@ const cors = require('cors');
 const productRoutes = require('./routes/product');
 const userRoutes = require('./routes/user');
 const cartRoutes = require('./routes/cart');
+const categoryRoutes = require('./routes/category');
 const config = require('./config');
 const path = require('path');
 
@@ -42,6 +43,7 @@ mongoose.connect(config.mongoURI)
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('api/categories', categoryRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 5000;

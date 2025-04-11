@@ -2,7 +2,7 @@ import * as React from 'react';
 import BasicMenu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
-import { Badge, IconButton } from '@mui/material';
+import { Avatar, Badge, IconButton } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CartDrawer from '../Drawer/CartDrawer';
 import { useGetCartQuery, useLogoutUserMutation } from '../../appSlice';
@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../Authentication/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { notifyError, notifySuccess } from '../Notifications/constants';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export default function Menu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -47,7 +48,12 @@ export default function Menu() {
   };
 
   return (
-    <div>
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <IconButton size="small" sx={{ ml: 1 }}>
+        <Avatar sx={{ width: 32, height: 32 }}>
+          <AccountCircleIcon />
+        </Avatar>
+      </IconButton>
       <IconButton color="inherit" onClick={toggleDrawer}>
         <Badge badgeContent={totalItems} color="secondary">
           <ShoppingCartIcon />

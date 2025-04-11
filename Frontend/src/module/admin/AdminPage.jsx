@@ -8,6 +8,7 @@ import AddEditDialoge from './AddEditDialoge';
 import { notifyError, notifySuccess } from '../common/Notifications/constants';
 import { productInitialState } from './constants';
 import AdminUserManagement from './AdminUserManagement';
+import CategoryListingTable from './CategoryListingTable';
 
 const AdminPage = () => {
     const [product, setProduct] = useState(productInitialState);
@@ -104,6 +105,7 @@ const AdminPage = () => {
             <ProductListingTable products={products?.products?.length > 0 ? products?.products : ""} setProduct={setProduct} setAddEditOpen={setAddEditOpen} handleDelete={handleDelete} setEdit={setEdit} />
             <AddEditDialoge product={product} setProduct={setProduct} handleClose={handleClose} addEditOpen={addEditOpen} handleUpdate={handleUpdate} handleImageChange={handleImageChange} edit={edit} handleAddProduct={handleAddProduct} />
             <AdminUserManagement />
+            <CategoryListingTable />
         </div>
     );
 };

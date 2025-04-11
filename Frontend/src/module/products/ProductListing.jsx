@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Button, Typography, Grid } from '@mui/material';
+import { Card, CardContent, CardMedia, Button, Typography, Grid, CardActions } from '@mui/material';
 import React from 'react'
 import { useAddToCartMutation } from '../appSlice';
 import { useSelector } from 'react-redux';
@@ -29,19 +29,34 @@ const ProductListing = ({ products, title }) => {
         <>
             <Grid container>
                 <Grid sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-                    <Typography>{title}</Typography>
+                    <Typography variant="h5" fontWeight="bold" gutterBottom>{title}</Typography>
                 </Grid>
             </Grid>
-            <Grid container spacing={2}>
+            <Grid container spacing={3} mb={6} sx={{ display: "flex", justifyContent: "center" }}>
                 {products?.length > 0 ? products?.map((product) => (
-                    <Grid item xs={12} sm={6} md={4} key={product?._id}>
-                        <Card sx={{ maxWidth: 345, margin: 2 }}>
-                            <CardMedia component="img" alt={product?.name} height="140" image={product?.image} />
-                            <CardContent>
-                                <Typography variant="h6" component="div"> {product.title} </Typography>
-                                <Typography variant="body2" color="text.secondary"> ${product?.price} </Typography>
-                                <Button size="small" variant="contained" color="primary" onClick={() => handleAddToCart(product)}> Add to Cart </Button>
+                    <Grid item xs={12} sm={6} md={3} key={product?._id}>
+                        <Card elevation={3} sx={{ height: "100%", width: "230px", display: "flex", flexDirection: "column" }}>
+                            <CardMedia
+                                component="img"
+                                height="160"
+                                image={product?.image}
+                                alt={product?.name}
+                                sx={{ objectFit: "contain", p: 1 }}
+                            />
+                            <CardContent sx={{ flexGrow: 1 }}>
+                                <Typography variant="subtitle1" fontWeight="bold" gutterBottom> {product?.name} </Typography>
+                                <Typography color="primary" variant="subtitle2"> ₹{product?.price} </Typography>
                             </CardContent>
+                            <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
+                                {/* <Button size="small" 
+                    // onClick={() => handleViewDetails(product._id)}
+                    >
+                        View
+                    </Button> */}
+                                <Button size="small" variant="contained" onClick={() => handleAddToCart(product)}>
+                                    Add to Cart
+                                </Button>
+                            </CardActions>
                         </Card>
                     </Grid>
                 )) :

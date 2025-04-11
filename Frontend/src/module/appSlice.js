@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const appSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api' }),
-    tagTypes: ['Product', 'Cart', 'User'],
+    tagTypes: ['Product', 'Cart', 'User', 'Category'],
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (userData) => ({
@@ -86,6 +86,33 @@ export const appSlice = createApi({
             }),
             invalidatesTags: ['Product'],
         }),
+        getCategories: builder.query({
+            query: () => '/categories',
+            providesTags: ['Category'],
+        }),
+        createCategory: builder.mutation({
+            query: (formData) => ({
+                url: '/categories',
+                method: 'POST',
+                body: formData,
+            }),
+            invalidatesTags: ['Category'],
+        }),
+        updateCategory: builder.mutation({
+            query: ({ id, formData }) => ({
+                url: `/categories/${id}`,
+                method: 'PUT',
+                body: formData,
+            }),
+            invalidatesTags: ['Category'],
+        }),
+        deleteCategory: builder.mutation({
+            query: (id) => ({
+                url: `/categories/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Category'],
+        }),
     }),
 });
 
@@ -101,5 +128,9 @@ export const {
     useGetProductsQuery,
     useAddProductMutation,
     useUpdateProductMutation,
-    useDeleteProductMutation
+    useDeleteProductMutation,
+    useGetCategoriesQuery,
+    useCreateCategoryMutation,
+    useUpdateCategoryMutation,
+    useDeleteCategoryMutation
 } = appSlice;
