@@ -8,6 +8,7 @@ const DrawerContent = ({ menuItems }) => {
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
   const navigate = useNavigate();
+  console.log("first", menuItems[3]);
 
   return (
     <div>
@@ -32,6 +33,12 @@ const DrawerContent = ({ menuItems }) => {
             <ListItemText primary={menuItems[1]?.children[2]?.title} />
           </ListItemButton>
         }
+        {menuItems[1]?.children[3] && (
+          <ListItemButton selected={location?.pathname === menuItems[1]?.children[3]?.path} disablePadding sx={{ borderBottom: "1px solid #ddd", '&.Mui-selected': { backgroundColor: '#1976d2', color: '#fff', '&:hover': { backgroundColor: '#1565c0', }, }, '&:hover': { backgroundColor: '#1976d2', } }} onClick={() => navigate(menuItems[1]?.children[3]?.path)}>
+            <ListItemIcon sx={{ fontSize: "8px" }}>ICON</ListItemIcon>
+            <ListItemText primary={menuItems[1]?.children[3]?.title} />
+          </ListItemButton>
+        )}
 
         {/* {menuItems[1]?.children[2]?.children && <SubMenu menuItem={menuItems[1]?.children[2]} />} */}
       </List>
