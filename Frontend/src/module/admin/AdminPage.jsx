@@ -20,7 +20,7 @@ const AdminPage = () => {
     const [updateProduct] = useUpdateProductMutation();
     const [deleteProduct] = useDeleteProductMutation();
 
-    const handleAddProduct = async () => {
+    const handleSubmit = async () => {
         const formData = new FormData();
         formData.append("category", product.category);
         formData.append("name", product.name);
@@ -30,28 +30,28 @@ const AdminPage = () => {
         formData.append("image", product.image);
         formData.append("isTrending", product.isTrending);
 
-        try {
-            const result = await addProduct(formData);
-            if ("data" in result) {
-                notifySuccess("Product Added Successfully");
-                setProduct(productInitialState);
-                setAddEditOpen(false);
+        if (edit) {
+            try {
+                const result = await updateProduct({ id: product?._id, formData });
+                if ("data" in result) {
+                    setAddEditOpen(false);
+                    notifySuccess("Product Updated Successfully");
+                    setProduct(productInitialState);
+                }
+            } catch (error) {
+                notifyError("Failed To Update Product");
             }
-        } catch {
-            notifyError("Failed To Add Product");
-        }
-    };
-
-    const handleUpdate = async () => {
-        try {
-            const result = await updateProduct(product);
-            if ("data" in result) {
-                setAddEditOpen(false);
-                notifySuccess("Product Updated Successfully");
-                setProduct(productInitialState);
+        } else {
+            try {
+                const result = await addProduct(formData);
+                if ("data" in result) {
+                    notifySuccess("Product Added Successfully");
+                    setProduct(productInitialState);
+                    setAddEditOpen(false);
+                }
+            } catch {
+                notifyError("Failed To Add Product");
             }
-        } catch (error) {
-            notifyError("Failed To Update Product");
         }
     };
 
@@ -98,12 +98,12 @@ const AdminPage = () => {
 
     return (
         <div style={{ margin: "0px 20px" }}>
-            <h2 style={{marginTop: "10px"}}>Admin - Product Management</h2>
+            <h2 style={{ marginTop: "10px" }}>Admin - Product Management</h2>
             <Grid container sx={{ display: "flex", justifyContent: "end", margin: "15px 0px" }}>
                 <Button sx={{ backgroundColor: "#1976D2", color: "white", "&:hover": { backgroundColor: "#318eeb" } }} onClick={() => handleAddNewProduct()}>Add New Product</Button>
             </Grid>
             <ProductListingTable products={products?.products?.length > 0 ? products?.products : ""} setProduct={setProduct} setAddEditOpen={setAddEditOpen} handleDelete={handleDelete} setEdit={setEdit} />
-            <AddEditDialoge product={product} setProduct={setProduct} handleClose={handleClose} addEditOpen={addEditOpen} handleUpdate={handleUpdate} handleImageChange={handleImageChange} edit={edit} handleAddProduct={handleAddProduct} />
+            <AddEditDialoge product={product} setProduct={setProduct} handleClose={handleClose} addEditOpen={addEditOpen} handleSubmit={handleSubmit} handleImageChange={handleImageChange} edit={edit} />
             <AdminUserManagement />
             <CategoryListingTable />
         </div>

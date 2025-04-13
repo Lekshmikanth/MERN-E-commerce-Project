@@ -71,8 +71,8 @@ export const appSlice = createApi({
             invalidatesTags: ['Product'],
         }),
         updateProduct: builder.mutation({
-            query: (formData) => ({
-                url: `/products/edit/${formData?._id}`,
+            query: ({ id, formData }) => ({
+                url: `/products/edit/${id}`,
                 method: 'PUT',
                 body: formData,
                 formData: true,

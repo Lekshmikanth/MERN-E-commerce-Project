@@ -67,6 +67,9 @@ const AdminUserManagement = () => {
     const table = useMaterialReactTable({
         columns,
         data: data?.users.length > 0 ? data?.users : "",
+        enableHiding: false,
+        enableDensityToggle: false,
+        enableFullScreenToggle: false,
     });
 
     return (

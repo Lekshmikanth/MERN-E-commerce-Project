@@ -32,7 +32,7 @@ const routes = [
             },
             {
                 title: "Products",
-                path: "/products",
+                path: "/",
                 element: <Products />,
                 children: productRoutes || [],
                 errorElement: <RootBoundary />

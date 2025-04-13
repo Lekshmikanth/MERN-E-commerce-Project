@@ -31,9 +31,9 @@ const Breadcrumb = () => {
                         breadcrumbsLength - 3 > index && handleClick(newpathName);
                     }}
                         sx={{ cursor: "pointer", fontSize: "14px", color: "white" }}>{breadcrumb}</Link> : <Link underline="none" size="small" icon={icon} key={pathname}
-                            // onClick={() => {
-                            //     breadcrumbsLength - 1 > index && handleClick(newpathName);
-                            // }}
+                            onClick={() => {
+                                breadcrumbsLength - 1 > index && handleClick(newpathName);
+                            }}
                             sx={{ cursor: "pointer", fontSize: "14px", color: "white" }}>{breadcrumb}</Link>);
             })}
         </Breadcrumbs>

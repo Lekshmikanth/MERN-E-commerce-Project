@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useCreateCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQuery, useUpdateCategoryMutation } from '../appSlice';
-// import { notifyError, notifySuccess } from '../common/Notifications/constants';
+import { notifyError, notifySuccess } from '../common/Notifications/constants';
 import ImageCompressor from 'browser-image-compression';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { Button, Grid, IconButton } from '@mui/material';
@@ -8,21 +8,28 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CategoryAddEdit from './CategoryAddEdit';
 import ConfirmDialog from '../common/Components/ConfirmDialog';
+import { categoryInitialState } from './constants';
 
 const CategoryListingTable = () => {
     const { data: categories } = useGetCategoriesQuery();
     const [createCategory] = useCreateCategoryMutation();
     const [updateCategory] = useUpdateCategoryMutation();
     const [deleteCategory] = useDeleteCategoryMutation();
-    const [form, setForm] = useState({ name: '', image: null });
+    const [form, setForm] = useState(categoryInitialState);
     const [openDialog, setOpenDialog] = useState(false);
     const [edit, setEdit] = useState(false);
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
+    console.log("first", form);
 
     const onConfirm = () => {
         handleDelete(id);
         setOpen(false);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+        setForm(categoryInitialState);
     };
 
     const handleAddNewCategory = () => {
@@ -35,29 +42,39 @@ const CategoryListingTable = () => {
         formData.append("name", form.name);
         formData.append("image", form.image);
 
-        try {
-            if (edit) {
-                await updateCategory(form).unwrap();
-            } else {
-                await createCategory(form).unwrap();
+        if (edit) {
+            try {
+                await updateCategory({ id: form?._id, formData }).unwrap();
+                setOpenDialog(false);
+                setForm(categoryInitialState);
+                notifySuccess("Category Updated Successfully");
+            } catch {
+                notifyError("Failed To Update Category");
             }
-            setForm({ name: "", image: null });
-            setEdit(false);
-            setOpenDialog(false);
-        } catch (err) {
-            console.error(err);
+        } else {
+            try {
+                await createCategory(formData).unwrap();
+                setOpenDialog(false);
+                setForm(categoryInitialState);
+                notifySuccess("Category Added Successfully");
+            } catch {
+                notifyError("Failed To Add Category");
+            }
         }
     };
 
     const handleEdit = (category) => {
-        setForm({ name: category.name, image: null });
+        setForm(category);
         setEdit(true);
         setOpenDialog(true);
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this category?")) {
-            await deleteCategory(id);
+        try{
+        await deleteCategory(id);
+        notifySuccess("Deleted Successfully");
+        }catch{
+            notifyError("Failed To Delete");
         }
     };
 
@@ -121,6 +138,9 @@ const CategoryListingTable = () => {
         columns,
         data: categories ? categories : "",
         enableColumnActions: false,
+        enableHiding: false,
+        enableDensityToggle: false,
+        enableFullScreenToggle: false,
         initialState: {
             density: 'compact', // options: 'comfortable' | 'compact' | 'spacious'
         },
@@ -133,7 +153,7 @@ const CategoryListingTable = () => {
                 <Button sx={{ backgroundColor: "#1976D2", color: "white", "&:hover": { backgroundColor: "#318eeb" } }} onClick={() => handleAddNewCategory()}>Add New Category</Button>
             </Grid>
             <MaterialReactTable table={table} />
-            <CategoryAddEdit form={form} setForm={setForm} openDialog={openDialog} setOpenDialog={setOpenDialog} edit={edit} setEdit={setEdit} handleSubmit={handleSubmit} handleImageChange={handleImageChange} />
+            <CategoryAddEdit form={form} setForm={setForm} openDialog={openDialog} setOpenDialog={setOpenDialog} handleClose={handleClose} edit={edit} setEdit={setEdit} handleSubmit={handleSubmit} handleImageChange={handleImageChange} />
             <ConfirmDialog
                 open={open}
                 onClose={() => setOpen(false)}

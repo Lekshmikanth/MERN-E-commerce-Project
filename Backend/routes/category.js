@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const Category = require('../models/category')
 const router = express.Router();
+const path = require('path');
 
 // Multer setup: save images to the 'uploads' folder
 const storage = multer.diskStorage({
@@ -19,8 +20,13 @@ const upload = multer({ storage: storage });
 // Create category
 router.post('/add', upload.single('image'), async (req, res) => {
     const { name } = req.body;
-    const image = req.file?.path;
-    const category = new Category({ name, image });
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;  // Use the file path to store in DB
+
+    if ( !name || !imagePath) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const category = new Category({ name, image: imagePath });
     await category.save();
     res.status(201).json(category);
 });
@@ -28,8 +34,13 @@ router.post('/add', upload.single('image'), async (req, res) => {
 // Update
 router.put('/:id', upload.single('image'), async (req, res) => {
     const { name } = req.body;
-    const updateData = { name };
-    if (req.file) updateData.image = req.file.path;
+    let imagePath = req.body.image;  // If no new image, keep the old one
+
+    if (req.file) {
+        imagePath = `/uploads/${req.file.filename}`;  // If a new image is uploaded, update the image path
+    }
+
+    const updateData = { name, image: imagePath };
     const category = await Category.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.json(category);
 });

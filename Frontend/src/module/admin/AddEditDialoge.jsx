@@ -3,14 +3,10 @@ import React from 'react'
 import { categoryDropdown } from './constants';
 
 const AddEditDialoge = (props) => {
-    const { product, setProduct, handleClose, addEditOpen, handleUpdate, handleImageChange, edit, handleAddProduct } = props;
+    const { product, setProduct, handleClose, addEditOpen, handleSubmit, handleImageChange, edit } = props;
 
     const handleAddUpdate = () => {
-        if (edit) {
-            handleUpdate()
-        } else {
-            handleAddProduct()
-        }
+        handleSubmit();
     };
 
     return (

@@ -85,6 +85,9 @@ const ProductListingTable = ({ products, setProduct, setAddEditOpen, setEdit, ha
         columns,
         data: products,
         enableColumnActions: false,
+        enableHiding: false,
+        enableDensityToggle: false,    // 🚫 removes toggle density button
+        enableFullScreenToggle: false,
         initialState: {
             density: 'compact', // options: 'comfortable' | 'compact' | 'spacious'
         },
