@@ -32,28 +32,28 @@ const Orders = () => {
     return (
         <Box sx={{ p: 2 }}>
             <Stack spacing={3}>
-                {orders.map(order => {
+                {orders?.map(order => {
                     total = 0
                     return (
-                        <Card key={order._id} variant="outlined" sx={{ borderRadius: 2 }}>
+                        <Card key={order?._id} variant="outlined" sx={{ borderRadius: 2 }}>
                             <CardContent>
                                 <Typography variant="subtitle1" color="textSecondary">
-                                    Order ID: <b>{order._id.slice(-6)}</b>
+                                    Order ID: <b>{order?._id.slice(-6)}</b>
                                 </Typography>
 
                                 <Divider sx={{ my: 1 }} />
 
-                                {order.products.map(item => {
+                                {order?.products?.map(item => {
                                     total += (item?.product?.price * item?.quantity)
                                     return (
-                                        <Box key={item.product._id} sx={{ mb: 1, display: "flex", gap: "20px" }}>
-                                            <img src={item?.product?.image} alt={item?.product?.name} width={60} height={60} style={{ borderRadius: 8 }} />
+                                        <Box key={item?.product?._id} sx={{ mb: 1, display: "flex", gap: "20px" }}>
+                                            <img src={`http://localhost:5000/api/products/image/${item?.product?.image}`} alt={item?.product?.name} width={60} height={60} style={{ borderRadius: 8 }} />
                                             <Grid>
                                                 <Typography variant="body1">
-                                                    {item.product.name} × {item.quantity}
+                                                    {item?.product?.name} × {item?.quantity}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary">
-                                                    ₹{item.product.price * item.quantity}
+                                                    ₹{item?.product?.price * item?.quantity}
                                                 </Typography>
                                             </Grid>
                                         </Box>
@@ -74,7 +74,7 @@ const Orders = () => {
                                             Sub Total: {total}
                                         </Typography>
                                         <Typography variant="body2" color="textSecondary">
-                                            Ordered on: {formatDate(order.createdAt || order.date)}
+                                            Ordered on: {formatDate(order?.createdAt || order?.date)}
                                         </Typography>
                                         <Typography variant="body2" color="textSecondary">
                                             Expected delivery in 5–7 days

@@ -147,7 +147,6 @@ const DrawerMenu = ({ item, path, depth, index, setShowSidebar }) => {
         pl: 0.5
       }}
       key={item.title}
-      disablePadding
     >
       {item.children?.length > 0 ? (
         <>
@@ -190,7 +189,7 @@ const DrawerMenu = ({ item, path, depth, index, setShowSidebar }) => {
             </>
           ) : (
             (checkIDs(item?.children)) &&
-            <ListItem sx={{}} disablePadding>
+              <ListItem sx={{}}>
               <ListItemButton
                 sx={{
                   ...active,

@@ -15,7 +15,7 @@ const CategoryListing = () => {
             </Grid>
             <Grid container spacing={3} sx={{ display: "flex", justifyContent: "center" }}>
                 {categories?.map((cat) => (
-                    <Grid item xs={12} sm={6} md={4} key={cat._id}>
+                    <Grid key={cat._id}>
                         <Card onClick={() => navigate(`/products/${cat?.name}`)} sx={{ cursor: "pointer", width: "150px", backgroundColor: "#F0F7FF", transition: "0.4s", "&:hover": { backgroundColor: "#BBDEFB"} }}>
                             <CardMedia
                                 component="img"

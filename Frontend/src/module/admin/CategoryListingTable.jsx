@@ -20,7 +20,6 @@ const CategoryListingTable = () => {
     const [edit, setEdit] = useState(false);
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
-    console.log("first", form);
 
     const onConfirm = () => {
         handleDelete(id);

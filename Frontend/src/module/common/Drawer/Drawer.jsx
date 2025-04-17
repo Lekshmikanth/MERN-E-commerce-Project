@@ -8,7 +8,7 @@ const Drawer = () => {
       <Divider />
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
+          <ListItem key={text}>
             <ListItemButton>
               <ListItemIcon>
                 {index % 2 === 0 ? "" : ""}
