@@ -1,19 +1,16 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ProductListing from '../ProductListing';
 import { useGetProductsQuery } from '../../appSlice';
 
 const CategorywiseListing = () => {
-    const location = useLocation();
-    const splitPath = location.pathname.split('/');
-    const lastWord = splitPath[2];
+    const { categoryName } = useParams();
     const filterKey = "category";
-    const filterValue = lastWord.charAt(0).toUpperCase() + lastWord.slice(1);
-    const { data: products = {} } = useGetProductsQuery({filterKey, filterValue});
+    const { data: products = {} } = useGetProductsQuery({ filterKey, filterValue: categoryName });
 
     return (
         <>
-            <ProductListing products={products?.products} title={filterValue} />
+            <ProductListing products={products?.products} title={categoryName} />
         </>
     )
 }

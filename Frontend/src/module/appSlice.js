@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const appSlice = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api' }),
-    tagTypes: ['Product', 'Cart', 'User', 'Category'],
+    tagTypes: ['Product', 'Cart', 'User', 'Category', 'Order'],
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (userData) => ({
@@ -71,8 +71,8 @@ export const appSlice = createApi({
             invalidatesTags: ['Product'],
         }),
         updateProduct: builder.mutation({
-            query: (formData) => ({
-                url: `/products/edit/${formData?._id}`,
+            query: ({ id, formData }) => ({
+                url: `/products/edit/${id}`,
                 method: 'PUT',
                 body: formData,
                 formData: true,
@@ -115,6 +115,18 @@ export const appSlice = createApi({
             }),
             invalidatesTags: ['Category'],
         }),
+        getOrders: builder.query({
+            query: (userId) => `/orders/${userId}`,
+            providesTags: ['Order']
+        }),
+        placeOrderFromCart: builder.mutation({
+            query: (userId) => ({
+                url: `/orders/from-cart/${userId}`,
+                method: 'POST',
+            }),
+            invalidatesTags: ['Cart', 'Order']
+        }),
+
     }),
 });
 
@@ -134,5 +146,7 @@ export const {
     useGetCategoriesQuery,
     useCreateCategoryMutation,
     useUpdateCategoryMutation,
-    useDeleteCategoryMutation
+    useDeleteCategoryMutation,
+    useGetOrdersQuery,
+    usePlaceOrderFromCartMutation
 } = appSlice;

@@ -1,10 +1,10 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material'
 import React from 'react'
 
-const CategoryAddEdit = ({ openDialog, setOpenDialog, edit, form, setForm, handleSubmit, handleImageChange }) => {
+const CategoryAddEdit = ({ openDialog, setOpenDialog, edit, form, setForm, handleSubmit, handleClose, handleImageChange }) => {
     return (
         <>
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+            <Dialog open={openDialog} onClose={() => handleClose} maxWidth="sm" fullWidth>
                 <DialogTitle>{edit ? "Edit Category" : "Add Category"}</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -26,7 +26,7 @@ const CategoryAddEdit = ({ openDialog, setOpenDialog, edit, form, setForm, handl
                             <img
                                 src={
                                     typeof form?.image === 'string'
-                                        ? form?.image
+                                        ? `http://localhost:5000/api/products/image/${form?.image}`
                                         : URL.createObjectURL(form?.image)
                                 }
                                 alt="preview"
@@ -34,16 +34,9 @@ const CategoryAddEdit = ({ openDialog, setOpenDialog, edit, form, setForm, handl
                             />
                         )}
                     </Grid>
-                    {/* <input
-                        type="file"
-                        name="image"
-                        accept="image/*"
-                        onChange={(e) => handleImageChange(e, setForm)}
-                        style={{ marginTop: 12 }}
-                    /> */}
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+                <DialogActions sx={{ mr: 2 }}>
+                    <Button onClick={handleClose}>Cancel</Button>
                     <Button onClick={handleSubmit} variant="contained">
                         {edit ? "Update" : "Create"}
                     </Button>

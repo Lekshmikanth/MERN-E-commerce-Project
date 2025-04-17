@@ -1,21 +1,18 @@
 import { lazy } from "react";
+import RootBoundary from "../../common/custom/RootBoundary";
 
+const CategoryListing = lazy(() => import("./CategoryListing"));
 const CategorywiseListing = lazy(() => import("./CategorywiseListing/CategorywiseListing"));
 
 const routes = [
     {
-        title: "Appliances",
-        path: "appliances",
-        element: <CategorywiseListing />
+        title: "Categories",
+        path: "/products",
+        element: <CategoryListing />,
+        errorElement: <RootBoundary />
     },
     {
-        title: "Electronics",
-        path: "electronics",
-        element: <CategorywiseListing />
-    },
-    {
-        title: "Mobiles",
-        path: "mobiles",
+        path: "/products/:categoryName",
         element: <CategorywiseListing />
     }
 ]

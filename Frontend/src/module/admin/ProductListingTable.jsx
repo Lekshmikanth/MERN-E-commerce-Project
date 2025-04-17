@@ -32,7 +32,7 @@ const ProductListingTable = ({ products, setProduct, setAddEditOpen, setEdit, ha
             {
                 accessorKey: "image",
                 header: "Image",
-                Cell: ({ cell }) => (<img src={cell.getValue()} alt="product" width={50} height={50} style={{ objectFit: "cover", borderRadius: 8 }} />),
+                Cell: ({ cell }) => (<img src={`http://localhost:5000/api/products/image/${cell.getValue()}`} alt="product" width={50} height={50} style={{ objectFit: "cover", borderRadius: 8 }} />),
                 size: 100,
             },
             {
@@ -85,6 +85,9 @@ const ProductListingTable = ({ products, setProduct, setAddEditOpen, setEdit, ha
         columns,
         data: products,
         enableColumnActions: false,
+        enableHiding: false,
+        enableDensityToggle: false,    // 🚫 removes toggle density button
+        enableFullScreenToggle: false,
         initialState: {
             density: 'compact', // options: 'comfortable' | 'compact' | 'spacious'
         },
