@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material'
 import React from 'react'
 
-const CategoryAddEdit = ({ openDialog, setOpenDialog, edit, form, setForm, handleSubmit, handleClose, handleImageChange }) => {
+const CategoryAddEdit = ({ openDialog, edit, form, setForm, handleSubmit, handleClose, handleImageChange }) => {
     return (
         <>
             <Dialog open={openDialog} onClose={() => handleClose} maxWidth="sm" fullWidth>

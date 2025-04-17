@@ -36,8 +36,8 @@ function Cart({ products, error, user, isLoggedIn }) {
                 <Grid container width={"368px"} spacing={1.5} display={"flex"} flexDirection={"column"} sx={{ mt: 1 }}>
                     {products?.products?.map((item) => {
                         totalPrice += (item?.product?.price * item?.quantity)
-                        return (< Box display="flex" gap={2} alignItems="center" mb={2} >
-                            <img src={item?.product?.image} alt={item?.product?.name} width={60} height={60} style={{ borderRadius: 8 }} />
+                        return (< Box display="flex" gap={2} alignItems="center" mb={2} key={item?.product?._id} >
+                            <img src={`http://localhost:5000/api/products/image/${item?.product?.image}`} alt={item?.product?.name} width={60} height={60} style={{ borderRadius: 8 }} />
                             <Box flexGrow={1}>
                                 <Typography>{item?.product?.name}</Typography>
                                 <Typography variant="body2" color="text.secondary">

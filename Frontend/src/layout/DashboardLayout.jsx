@@ -14,7 +14,6 @@ function DashboardLayout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const menuItems = routes;
-  console.log("routes", routes);
 
   const handleDrawerClose = () => {
     setIsClosing(true);

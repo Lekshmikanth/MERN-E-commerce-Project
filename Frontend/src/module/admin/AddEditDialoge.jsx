@@ -5,7 +5,6 @@ import { useGetCategoriesQuery } from '../appSlice';
 const AddEditDialoge = (props) => {
     const { product, setProduct, handleClose, addEditOpen, handleSubmit, handleImageChange, edit } = props;
     const { data: categories } = useGetCategoriesQuery();
-    console.log("first", categories);
 
     const handleAddUpdate = () => {
         handleSubmit();

@@ -34,7 +34,7 @@ const ProductListing = ({ products, title }) => {
             </Grid>
             <Grid container spacing={3} mb={6} sx={{ display: "flex", justifyContent: "center" }}>
                 {products?.length > 0 ? products?.map((product) => (
-                    <Grid item xs={12} sm={6} md={3} key={product?._id}>
+                    <Grid key={product?._id}>
                         <Card elevation={3} sx={{ height: "100%", width: "230px", display: "flex", flexDirection: "column", backgroundColor: "#F0F7FF", transition: "0.4s", "&:hover": { backgroundColor: "#BBDEFB" } }}>
                             <CardMedia
                                 component="img"
