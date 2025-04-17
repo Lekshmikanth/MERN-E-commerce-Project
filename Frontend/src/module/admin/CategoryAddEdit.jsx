@@ -26,7 +26,7 @@ const CategoryAddEdit = ({ openDialog, setOpenDialog, edit, form, setForm, handl
                             <img
                                 src={
                                     typeof form?.image === 'string'
-                                        ? form?.image
+                                        ? `http://localhost:5000/api/products/image/${form?.image}`
                                         : URL.createObjectURL(form?.image)
                                 }
                                 alt="preview"

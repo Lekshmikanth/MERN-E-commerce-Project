@@ -16,12 +16,13 @@ const CategoryListing = () => {
             <Grid container spacing={3} sx={{ display: "flex", justifyContent: "center" }}>
                 {categories?.map((cat) => (
                     <Grid item xs={12} sm={6} md={4} key={cat._id}>
-                        <Card onClick={() => navigate(`/products/${cat?.name}`)} sx={{ cursor: "pointer" }}>
+                        <Card onClick={() => navigate(`/products/${cat?.name}`)} sx={{ cursor: "pointer", width: "150px", backgroundColor: "#F0F7FF", transition: "0.4s", "&:hover": { backgroundColor: "#BBDEFB"} }}>
                             <CardMedia
                                 component="img"
-                                height="140"
-                                image={cat?.image}
+                                height="100"
+                                image={`http://localhost:5000/api/products/image/${cat?.image}`}
                                 alt={cat?.name}
+                                sx={{ objectFit: "contain", p: 1 }}
                             />
                             <CardContent>
                                 <Typography variant="h6">{cat?.name}</Typography>

@@ -1,127 +1,146 @@
 const express = require('express');
-const multer = require('multer');  // Import multer for file handling
 const Product = require('../models/product');
-const fs = require('fs');
-const path = require('path');
-const router = express.Router();
+const upload = require('../imageUpload');
+const mongoose = require('mongoose');
 
-// Multer setup: save images to the 'uploads' folder
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, '../uploads');
-        cb(null, uploadPath);  // Directory where images will be saved
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));  // Save image with a unique name
-    }
-});
+module.exports = (bucket) => {
+    const router = express.Router();
 
+    // Add Product
+    router.post('/add', upload.single('image'), async (req, res) => {
+        const { category, name, description, price, quantity, isTrending } = req.body;
+        const imagePath = req.file ? req.file.filename : null;
 
-// Set up multer instance for handling single file uploads with the name 'image'
-const upload = multer({ storage: storage });
+        if (!category || !name || !description || !price || !quantity || !imagePath) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
 
-// Add product route with image upload
-router.post('/add', upload.single('image'), async (req, res) => {
-    const { category, name, description, price, quantity, isTrending } = req.body;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;  // Use the file path to store in DB
+        const product = new Product({
+            category,
+            name,
+            description,
+            price,
+            quantity,
+            image: imagePath,
+            isTrending,
+        });
 
-    // Validate required fields
-    if (!category || !name || !description || !price || !quantity || !imagePath) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    // Create a new product with the image path
-    const product = new Product({
-        category,
-        name,
-        description,
-        price,
-        quantity,
-        image: imagePath,  // Save the image path (not the buffer)
-        isTrending
+        try {
+            await product.save();
+            res.status(201).json({ message: 'Product added successfully', product });
+        } catch (error) {
+            res.status(400).json({ message: 'Failed to add product', error });
+        }
     });
 
-    try {
-        await product.save();
-        res.status(201).json({ message: 'Product added successfully', product });
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to add product', error });
-    }
-});
+    // Edit Product
+    router.put('/edit/:id', upload.single('image'), async (req, res) => {
+        const { id } = req.params;
+        const { category, name, description, price, quantity, isTrending } = req.body;
 
-// Edit Product route
-router.put('/edit/:id', upload.single('image'), async (req, res) => {
-    const { id } = req.params;
-    const { category, name, description, price, quantity, isTrending } = req.body;
-    let imagePath = req.body.image;  // If no new image, keep the old one
+        try {
+            const existingProduct = await Product.findById(id);
+            if (!existingProduct) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
 
-    if (req.file) {
-        imagePath = `/uploads/${req.file.filename}`;  // If a new image is uploaded, update the image path
-    }
+            let newImage = existingProduct.image;
+            if (req.file) {
+                newImage = req.file.filename;
 
-    try {
-        const product = await Product.findByIdAndUpdate(
-            id,
-            { category, name, description, price, quantity, image: imagePath, isTrending },
-            { new: true }
-        );
-        res.status(200).json({ message: 'Product updated', product });
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to update product', error });
-    }
-});
+                // Delete old image from GridFS
+                const file = await mongoose.connection.db
+                    .collection('productImages.files')
+                    .findOne({ filename: existingProduct.image });
 
-// Delete Product
-router.delete('/delete/:id', async (req, res) => {
-    const { id } = req.params;
+                if (file) {
+                    await bucket.delete(file._id);
+                }
+            }
 
-    try {
-        await Product.findByIdAndDelete(id);
-        res.status(200).json({ message: 'Product deleted' });
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to delete product', error });
-    }
-});
+            const updatedProduct = await Product.findByIdAndUpdate(
+                id,
+                { category, name, description, price, quantity, image: newImage, isTrending },
+                { new: true }
+            );
 
-// Get All Products
-router.get('/', async (req, res) => {
-    const { category, isTrending } = req.query;
-    try {
-        let query = {};
+            res.status(200).json({ message: 'Product updated', product: updatedProduct });
+        } catch (error) {
+            res.status(400).json({ message: 'Failed to update product', error });
+        }
+    });
 
-        if (category) {
-            query.category = { $regex: category, $options: "i" }; // Case-insensitive search
+    // Delete Product
+    router.delete('/delete/:id', async (req, res) => {
+        const { id } = req.params;
+
+        try {
+            const product = await Product.findByIdAndDelete(id);
+            if (!product) return res.status(404).json({ message: 'Product not found' });
+
+            const filename = product.image;
+
+            if (filename) {
+                const file = await mongoose.connection.db
+                    .collection('productImages.files')
+                    .findOne({ filename });
+
+                if (file) {
+                    await bucket.delete(file._id);
+                }
+            }
+
+            res.status(200).json({ message: 'Product deleted' });
+        } catch (error) {
+            res.status(400).json({ message: 'Failed to delete product', error });
+        }
+    });
+
+    // Get All Products
+    router.get('/', async (req, res) => {
+        const { category, isTrending } = req.query;
+        try {
+            let query = {};
+
+            if (category) {
+                query.category = { $regex: category, $options: 'i' };
+            }
+
+            if (isTrending) {
+                query.isTrending = isTrending === 'true';
+            }
+
             const products = await Product.find(query);
             res.status(200).json({ products });
+        } catch (error) {
+            res.status(400).json({ message: 'Failed to retrieve products', error });
         }
-        else if (isTrending) {
-            query.isTrending = isTrending === 'true';
-            const products = await Product.find(query);
-            res.status(200).json({ products });
-        } else {
-            const products = await Product.find();
-            res.status(200).json({ products });
+    });
+
+    // Get a Single Product by ID
+    router.get('/:id', async (req, res) => {
+        const { id } = req.params;
+        try {
+            const product = await Product.findById(id);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+            res.status(200).json({ product });
+        } catch (error) {
+            res.status(400).json({ message: 'Failed to retrieve product', error });
         }
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to retrieve products', error });
-    }
-});
+    });
 
-// Get a Single Product by ID
-router.get('/:id', async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const product = await Product.findById(id);
-
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+    // Get Image by Filename
+    router.get('/image/:filename', async (req, res) => {
+        try {
+            const fileStream = bucket.openDownloadStreamByName(req.params.filename);
+            fileStream.on('error', () => res.status(404).send('Image not found'));
+            fileStream.pipe(res);
+        } catch (error) {
+            res.status(500).json({ message: 'Error retrieving image', error });
         }
+    });
 
-        res.status(200).json({ product });
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to retrieve product', error });
-    }
-});
-
-module.exports = router;
+    return router;
+};

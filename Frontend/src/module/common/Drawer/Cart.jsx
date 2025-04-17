@@ -1,18 +1,14 @@
 import { Box, Divider, Grid, IconButton, Typography } from '@mui/material';
-import { useDeleteFromCartMutation, useGetCartQuery } from '../../appSlice';
-import { useSelector } from 'react-redux';
+import { useDeleteFromCartMutation } from '../../appSlice';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { notifyError, notifySuccess } from '../Notifications/constants';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-function Cart() {
-    const { user, isLoggedIn } = useSelector((state) => state.auth);
-
-    const { data: products, isLoading, error } = useGetCartQuery(user?._id, { skip: !user, });
+function Cart({ products, error, user, isLoggedIn }) {
     const [deleteFromCart] = useDeleteFromCartMutation();
     let totalPrice = 0;
 
     if (!isLoggedIn) return <p>Please login to view your cart.</p>;
-    if (isLoading) return <p>Loading cart...</p>;
     if (error) return <p>Failed to load cart.</p>;
 
     const handleDeleteCart = async ({ userId, productId }) => {
@@ -27,26 +23,16 @@ function Cart() {
     return (
         <div>
             {products?.products?.length === 0 ? (
-                <p>Cart is empty.</p>
-            ) : (
-                // <Grid container width={"368px"} spacing={1.5} display={"flex"} flexDirection={"column"} sx={{ mt: 1 }}>
-                //     {products?.products?.map((item) => {
-                //         totalPrice += (item?.product?.price * item?.quantity)
-                //         return (
-                //             <Grid item sx={{ borderBottom: "1px solid #cdcdcd", pb: 1, gap: "10px" }} key={item?.product?._id} display={"flex"} alignItems={"center"}>
-                //                 <Grid><img width={"100px"} height={"100px"} src={item?.product?.image} alt="" /></Grid>
-                //                 <Grid sx={{ display: "flex", flexDirection: "column", justifyContent: "center", width: "120px" }}>
-                //                     <span>{item?.product?.name}</span>
-                //                     <p style={{ fontSize: "13px", margin: 0 }}>Price: ₹{item?.product?.price}</p>
-                //                     {/* <p style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px", margin: 0 }}>Qty: <span><input type='number' value={item?.quantity} style={{ width: "40px", height: "30px", padding: "0px", paddingLeft: "7px", outline: "none", borderRadius: "10px", border: "2px solid rgb(27, 178, 238)" }} /></span></p> */}
-                //                 </Grid>
-                //                 {/* <Grid sx={{ fontSize: "14px", width: "80px" }}>Total: {item?.product?.price * item?.quantity}</Grid> */}
-                //                 <Grid><IconButton onClick={() => handleDeleteCart({ userId: user?._id, productId: item?.product?._id })}><DeleteIcon /></IconButton></Grid>
-                //             </Grid>
-                //         )
-                //     })
-                //     }
-                // </Grid>
+                <Box textAlign="center">
+                    <DotLottieReact
+                        src="https://lottie.host/68e14079-76b8-496a-8f54-0904ec1d949c/kUrrOup7BX.lottie"
+                        loop
+                        autoplay
+                    />
+                    <Typography variant="h6" color="textSecondary" mt={2}>
+                        Your cart is empty
+                    </Typography>
+                </Box>) : (
                 <Grid container width={"368px"} spacing={1.5} display={"flex"} flexDirection={"column"} sx={{ mt: 1 }}>
                     {products?.products?.map((item) => {
                         totalPrice += (item?.product?.price * item?.quantity)
@@ -68,7 +54,7 @@ function Cart() {
                         </Box>
                         )
                     })
-                }
+                    }
                 </Grid>
             )
             }

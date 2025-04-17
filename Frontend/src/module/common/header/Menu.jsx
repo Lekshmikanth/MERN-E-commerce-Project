@@ -11,10 +11,12 @@ import { logoutUser } from '../../Authentication/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { notifyError, notifySuccess } from '../Notifications/constants';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import OrdersDrawer from '../Drawer/OrdersDrawer';
 
 export default function Menu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [ordersOpen, setOrdersOpen] = React.useState(false);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +26,11 @@ export default function Menu() {
   };
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
+  };
+
+  const toggleOrderDrawer = () => {
+    setOrdersOpen(!ordersOpen);
+    handleClose();
   };
 
   const dispatch = useDispatch();
@@ -49,6 +56,7 @@ export default function Menu() {
 
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
+      <OrdersDrawer open={ordersOpen} toggleDrawer={toggleOrderDrawer} />
       <IconButton size="small" sx={{ ml: 1 }}>
         <Avatar sx={{ width: 32, height: 32 }}>
           <AccountCircleIcon />
@@ -79,7 +87,7 @@ export default function Menu() {
         }}
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My Orders</MenuItem>
+        <MenuItem onClick={toggleOrderDrawer}>My Orders</MenuItem>
         <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
       </BasicMenu>
     </div>

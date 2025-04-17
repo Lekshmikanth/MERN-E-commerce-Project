@@ -1,9 +1,11 @@
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Grid, MenuItem, TextField } from '@mui/material'
 import React from 'react'
-import { categoryDropdown } from './constants';
+import { useGetCategoriesQuery } from '../appSlice';
 
 const AddEditDialoge = (props) => {
     const { product, setProduct, handleClose, addEditOpen, handleSubmit, handleImageChange, edit } = props;
+    const { data: categories } = useGetCategoriesQuery();
+    console.log("first", categories);
 
     const handleAddUpdate = () => {
         handleSubmit();
@@ -25,11 +27,11 @@ const AddEditDialoge = (props) => {
                                 sx={{ width: "300px", mb: 2 }}
                                 onChange={(e) => setProduct({ ...product, category: e.target.value })}
                             >
-                                {categoryDropdown?.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
+                                {categories?.length > 0 ? categories?.map((option) => (
+                                    <MenuItem key={option.name} value={option.name}>
+                                        {option.name}
                                     </MenuItem>
-                                ))}
+                                )) : ""}
                             </TextField>
                         </Grid>
                         <Grid >
@@ -95,7 +97,7 @@ const AddEditDialoge = (props) => {
                                 <img
                                     src={
                                         typeof product?.image === 'string'
-                                            ? product?.image
+                                            ? `http://localhost:5000/api/products/image/${product.image}`
                                             : URL.createObjectURL(product?.image)
                                     }
                                     alt="preview"

@@ -109,7 +109,7 @@ const CategoryListingTable = () => {
             {
                 accessorKey: "image",
                 header: "Image",
-                Cell: ({ cell }) => (<img src={cell.getValue()} alt="product" width={50} height={50} style={{ objectFit: "cover", borderRadius: 8 }} />),
+                Cell: ({ cell }) => (<img src={`http://localhost:5000/api/products/image/${cell.getValue()}`} alt="product" width={50} height={50} style={{ objectFit: "cover", borderRadius: 8 }} />),
                 size: 100,
             },
             {
