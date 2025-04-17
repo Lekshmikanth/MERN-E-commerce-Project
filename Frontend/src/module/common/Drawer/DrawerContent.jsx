@@ -10,7 +10,7 @@ const DrawerContent = ({ menuItems }) => {
 
   return (
     <div>
-      <Toolbar sx={{padding: "0px !important"}}><img src='shoppingZone.png' alt='logo' width={"100%"} height={"64px"} /></Toolbar>
+      <Toolbar sx={{ padding: "0px !important" }}><img src='icon.png' alt='logo' width={"100%"} height={"64px"} /></Toolbar>
       <Divider />
       <List sx={{ padding: 0 }}>
         {menuItems[1]?.children[0] && (
