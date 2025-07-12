@@ -55,61 +55,61 @@ const ContactUs = () => {
 
     return (
         <Box sx={{ maxWidth: 600, mx: 'auto', my: 5, px: 2 }}>
-            <Paper elevation={3} sx={{ p: 4 }}>
-                <Typography variant="h4" gutterBottom>
+            <Paper
+                elevation={3}
+                sx={{
+                    p: 4,
+                    bgcolor: '#2a2a2a',
+                    color: '#fff',
+                    borderRadius: 3,
+                }}
+            >
+                <Typography variant="h4" gutterBottom sx={{ color: '#FF9021', fontWeight: 'bold' }}>
                     Contact Us
                 </Typography>
 
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
+                        {['name', 'email', 'subject', 'message'].map((field) => (
+                            <Grid item xs={12} key={field}>
+                                <TextField
+                                    label={field.charAt(0).toUpperCase() + field.slice(1)}
+                                    name={field}
+                                    fullWidth
+                                    multiline={field === 'message'}
+                                    minRows={field === 'message' ? 4 : 1}
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    error={!!errors[field]}
+                                    helperText={errors[field]}
+                                    variant="outlined"
+                                    InputLabelProps={{ style: { color: '#aaa' } }}
+                                    InputProps={{
+                                        style: {
+                                            backgroundColor: '#1e1e1e',
+                                            color: '#fff',
+                                            borderColor: '#444',
+                                        },
+                                    }}
+                                />
+                            </Grid>
+                        ))}
+
                         <Grid item xs={12}>
-                            <TextField
-                                label="Name"
-                                name="name"
+                            <Button
+                                type="submit"
+                                variant="contained"
                                 fullWidth
-                                value={formData.name}
-                                onChange={handleChange}
-                                error={!!errors.name}
-                                helperText={errors.name}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Email"
-                                name="email"
-                                fullWidth
-                                value={formData.email}
-                                onChange={handleChange}
-                                error={!!errors.email}
-                                helperText={errors.email}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Subject"
-                                name="subject"
-                                fullWidth
-                                value={formData.subject}
-                                onChange={handleChange}
-                                error={!!errors.subject}
-                                helperText={errors.subject}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Message"
-                                name="message"
-                                fullWidth
-                                multiline
-                                minRows={4}
-                                value={formData.message}
-                                onChange={handleChange}
-                                error={!!errors.message}
-                                helperText={errors.message}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button type="submit" variant="contained" fullWidth>
+                                sx={{
+                                    bgcolor: '#FF9021',
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                    textTransform: 'none',
+                                    '&:hover': {
+                                        bgcolor: '#CC711A',
+                                    },
+                                }}
+                            >
                                 Send Message
                             </Button>
                         </Grid>
@@ -117,47 +117,36 @@ const ContactUs = () => {
                 </form>
 
                 {/* Social Links */}
-                <Box mt={4} textAlign="center">
-                    <Typography variant="subtitle1" gutterBottom>
+                <Box textAlign="center">
+                    <Typography variant="subtitle1" gutterBottom sx={{ color: '#ccc' }}>
                         Connect with us:
                     </Typography>
                     <Stack direction="row" spacing={2} justifyContent="center">
-                        <IconButton
-                            component="a"
-                            href="https://www.facebook.com/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            color="primary"
-                        >
-                            <FacebookIcon />
-                        </IconButton>
-                        <IconButton
-                            component="a"
-                            href="https://twitter.com/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            color="primary"
-                        >
-                            <TwitterIcon />
-                        </IconButton>
-                        <IconButton
-                            component="a"
-                            href="https://www.instagram.com/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            color="primary"
-                        >
-                            <InstagramIcon />
-                        </IconButton>
-                        <IconButton
-                            component="a"
-                            href="https://www.linkedin.com/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            color="primary"
-                        >
-                            <LinkedInIcon />
-                        </IconButton>
+                        {[
+                            { icon: <FacebookIcon />, href: 'https://facebook.com' },
+                            { icon: <TwitterIcon />, href: 'https://twitter.com' },
+                            { icon: <InstagramIcon />, href: 'https://instagram.com' },
+                            { icon: <LinkedInIcon />, href: 'https://linkedin.com' },
+                        ].map(({ icon, href }, index) => (
+                            <IconButton
+                                key={index}
+                                component="a"
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                sx={{
+                                    bgcolor: '#1e1e1e',
+                                    color: '#FF9021',
+                                    border: '1px solid #444',
+                                    '&:hover': {
+                                        bgcolor: '#CC711A',
+                                        color: '#fff',
+                                    },
+                                }}
+                            >
+                                {icon}
+                            </IconButton>
+                        ))}
                     </Stack>
                 </Box>
             </Paper>

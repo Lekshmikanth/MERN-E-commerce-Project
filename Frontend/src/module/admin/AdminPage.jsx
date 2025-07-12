@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
 import './AdminPage.css';
 import ImageCompressor from 'browser-image-compression';
-import { useAddProductMutation, useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from '../appSlice';
-import { Button, Grid } from '@mui/material';
+import {
+    useAddProductMutation,
+    useDeleteProductMutation,
+    useGetProductsQuery,
+    useUpdateProductMutation,
+} from '../appSlice';
+import {
+    Box,
+    Button,
+    Grid,
+    Typography,
+    Paper,
+} from '@mui/material';
 import ProductListingTable from './ProductListingTable';
 import AddEditDialoge from './AddEditDialoge';
 import { notifyError, notifySuccess } from '../common/Notifications/constants';
@@ -30,28 +41,19 @@ const AdminPage = () => {
         formData.append("image", product.image);
         formData.append("isTrending", product.isTrending);
 
-        if (edit) {
-            try {
-                const result = await updateProduct({ id: product?._id, formData });
-                if ("data" in result) {
-                    setAddEditOpen(false);
-                    notifySuccess("Product Updated Successfully");
-                    setProduct(productInitialState);
-                }
-            } catch (error) {
-                notifyError("Failed To Update Product");
+        try {
+            const result = edit
+                ? await updateProduct({ id: product?._id, formData })
+                : await addProduct(formData);
+
+            if ("data" in result) {
+                notifySuccess(edit ? "Product Updated Successfully" : "Product Added Successfully");
+                setProduct(productInitialState);
+                setAddEditOpen(false);
+                setEdit(false);
             }
-        } else {
-            try {
-                const result = await addProduct(formData);
-                if ("data" in result) {
-                    notifySuccess("Product Added Successfully");
-                    setProduct(productInitialState);
-                    setAddEditOpen(false);
-                }
-            } catch {
-                notifyError("Failed To Add Product");
-            }
+        } catch (error) {
+            notifyError(edit ? "Failed To Update Product" : "Failed To Add Product");
         }
     };
 
@@ -59,15 +61,15 @@ const AdminPage = () => {
         try {
             await deleteProduct(id);
             notifySuccess("Product deleted successfully");
-        } catch (error) {
+        } catch {
             notifyError("Failed to delete product");
         }
     };
 
     const handleClose = () => {
-        setAddEditOpen(!addEditOpen);
+        setAddEditOpen(false);
         setProduct(productInitialState);
-    }
+    };
 
     const handleAddNewProduct = () => {
         setEdit(false);
@@ -82,12 +84,12 @@ const AdminPage = () => {
                 useWebWorker: true,
             };
             const compressedFile = await ImageCompressor(file, options);
-            setProduct((prevProduct) => ({ ...prevProduct, image: compressedFile }));
+            setProduct((prev) => ({ ...prev, image: compressedFile }));
         } catch (error) {
             console.error("Image compression failed", error);
         }
     };
-    // Handle image file selection
+
     const handleImageChange = (e, setProduct) => {
         const file = e.target.files[0];
         if (file) {
@@ -95,18 +97,61 @@ const AdminPage = () => {
         }
     };
 
-
     return (
-        <div style={{ margin: "0px 20px" }}>
-            <h2 style={{ marginTop: "10px" }}>Admin - Product Management</h2>
-            <Grid container sx={{ display: "flex", justifyContent: "end", margin: "15px 0px" }}>
-                <Button sx={{ backgroundColor: "#1976D2", color: "white", "&:hover": { backgroundColor: "#318eeb" } }} onClick={() => handleAddNewProduct()}>Add New Product</Button>
-            </Grid>
-            <ProductListingTable products={products?.products?.length > 0 ? products?.products : ""} setProduct={setProduct} setAddEditOpen={setAddEditOpen} handleDelete={handleDelete} setEdit={setEdit} />
-            <AddEditDialoge product={product} setProduct={setProduct} handleClose={handleClose} addEditOpen={addEditOpen} handleSubmit={handleSubmit} handleImageChange={handleImageChange} edit={edit} />
-            <AdminUserManagement />
-            <CategoryListingTable />
-        </div>
+        <Box
+            sx={{
+                p: 3,
+                backgroundColor: "#121212",
+                minHeight: "100vh",
+                color: "#fff",
+            }}
+        >
+            <Paper elevation={4} sx={{ backgroundColor: "#1e1e1e", p: 3, borderRadius: 2 }}>
+                <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ color: "#FF9021" }}>
+                    Admin - Product Management
+                </Typography>
+
+                <Grid container justifyContent="flex-end" sx={{ mb: 2 }}>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            backgroundColor: "#FF9021",
+                            color: "#fff",
+                            "&:hover": { backgroundColor: "#cc711a" },
+                        }}
+                        onClick={handleAddNewProduct}
+                    >
+                        Add New Product
+                    </Button>
+                </Grid>
+
+                <ProductListingTable
+                    products={products?.products?.length > 0 ? products?.products : ""}
+                    setProduct={setProduct}
+                    setAddEditOpen={setAddEditOpen}
+                    handleDelete={handleDelete}
+                    setEdit={setEdit}
+                />
+
+                <AddEditDialoge
+                    product={product}
+                    setProduct={setProduct}
+                    handleClose={handleClose}
+                    addEditOpen={addEditOpen}
+                    handleSubmit={handleSubmit}
+                    handleImageChange={handleImageChange}
+                    edit={edit}
+                />
+            </Paper>
+
+            {/* Additional Admin Sections */}
+            <Box mt={4}>
+                <AdminUserManagement />
+            </Box>
+            <Box mt={4}>
+                <CategoryListingTable />
+            </Box>
+        </Box>
     );
 };
 

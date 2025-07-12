@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import ProductListing from './products/ProductListing'
+import React, { useEffect } from 'react';
+import ProductListing from './products/ProductListing';
 import { useGetProductsQuery } from './appSlice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -15,61 +15,54 @@ const HomePage = () => {
         if (!user) {
             navigate("/login");
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user, navigate])
+    }, [user, navigate]);
 
     return (
-        <>
-            <Container maxWidth="lg" sx={{ py: 4 }}>
-                {/* Hero Section */}
-                <Box
-                    sx={{
-                        backgroundColor: "#e3f2fd",
-                        borderRadius: 4,
-                        p: 3,
-                        textAlign: "center",
-                        mb: 4,
-                    }}
+        <Container maxWidth="lg" sx={{ py: 4, bgcolor: '#1e1e1e' }}>
+            {/* Hero Section */}
+            <Box
+                sx={{
+                    backgroundColor: "#2a2a2a",
+                    borderRadius: 4,
+                    p: 4,
+                    textAlign: "center",
+                    mb: 5,
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+                }}
+            >
+                <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    sx={{ color: '#FF9021', mb: 1 }}
                 >
-                    <Typography variant="h4" fontWeight="bold">
-                        Welcome to Shopping Zone 🛒
-                    </Typography>
-                    <Typography variant="h6" color="text.secondary" mt={1}>
-                        Discover trending deals and new arrivals!
-                    </Typography>
-                </Box>
+                    Welcome to Shopping Zone 🛒
+                </Typography>
+                <Typography variant="h6" sx={{ color: '#ccc' }}>
+                    Discover trending deals and new arrivals!
+                </Typography>
+            </Box>
 
-                {/* Trending Products */}
+            {/* Trending Products */}
+            <Box>
+                <Typography
+                    variant="h5"
+                    fontWeight="bold"
+                    sx={{ color: '#FF9021', mb: 2 }}
+                >
+                    🔥 Trending Products
+                </Typography>
                 {trendingLoading ? (
                     <Box display="flex" justifyContent="center" py={4}>
-                        <CircularProgress />
+                        <CircularProgress sx={{ color: "#FF9021" }} />
                     </Box>
                 ) : (
-                    <Grid container spacing={3} mb={6} sx={{display: "flex", justifyContent: "center"}}>
-                            <ProductListing products={products?.products} title={"🔥 Trending Products"} />
-                            {/* {products?.products?.map(renderProductCard)} */}
+                    <Grid container spacing={3} mb={6} sx={{ justifyContent: "center" }}>
+                        <ProductListing products={products?.products} />
                     </Grid>
                 )}
-                {/* <div style={{ padding: "20px" }}>
-                </div> */}
+            </Box>
+        </Container>
+    );
+};
 
-                {/* New Arrivals */}
-                {/* <Typography variant="h5" fontWeight="bold" gutterBottom>
-                    🆕 New Arrivals
-                </Typography> */}
-                {/* {arrivalsLoading ? (
-                    <Box display="flex" justifyContent="center" py={4}>
-                        <CircularProgress />
-                    </Box>
-                ) : (
-                    <Grid container spacing={3}>
-                        {newArrivals?.products?.map(renderProductCard)}
-                    </Grid>
-                )} */}
-            </Container>
-
-        </>
-    )
-}
-
-export default HomePage
+export default HomePage;

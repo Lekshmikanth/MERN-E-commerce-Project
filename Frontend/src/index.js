@@ -7,16 +7,20 @@ import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { AuthProvider } from './module/Authentication/AuthContext';
 import Notifications from './module/common/Notifications/Notifications';
+import { ThemeProvider } from '@mui/material';
+import { darkTheme } from './common/ThemeProvider/ThemeProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Provider store={store} >
-      <AuthProvider>
-        <Notifications />
-        <PermittedRoutes />
-      </AuthProvider>
-    </Provider>
+    <ThemeProvider theme={darkTheme}>
+      <Provider store={store} >
+        <AuthProvider>
+          <Notifications />
+          <PermittedRoutes />
+        </AuthProvider>
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 

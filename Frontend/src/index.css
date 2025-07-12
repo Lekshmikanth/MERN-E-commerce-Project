@@ -1,0 +1,27 @@
+.css-rizt0-MuiTypography-root {
+    background-color: #121212;
+}
+
+.css-rizt0-MuiTypography-root{
+    background-color: transparent;
+}
+
+.MuiTypography-root:where(.css-cfq8qh-MuiListItemText-root .MuiListItemText-primary) {
+    background-color: transparent;
+}
+
+:root {
+    background-color: #121212;
+}
+
+.MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-18i2zvo-MuiFormControlLabel-root {
+    background-color: transparent !important;
+}
+
+.MuiTypography-root MuiTypography-body1 css-rizt0-MuiTypography-root {
+    background-color: transparent !important;
+}
+
+.css-13tmdd1{
+    background-color: transparent !important;
+}

@@ -1,15 +1,16 @@
-/* AdminPage.css */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-h2, h3 {
+h2,
+h3 {
   text-align: center;
 }
 
-input, textarea {
+input,
+textarea {
   display: block;
   margin: 10px 0;
   padding: 8px;
