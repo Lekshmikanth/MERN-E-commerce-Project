@@ -7,12 +7,7 @@ import {
     Grid,
     IconButton,
     Tooltip,
-    Box,
-    Typography,
-    MenuItem,
-    Select,
-    FormControl,
-    InputBase,
+    Box
 } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -116,6 +111,7 @@ const ProductListingTable = ({
             ),
             size: 70,
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     ], []);
 
     const table = useMaterialReactTable({

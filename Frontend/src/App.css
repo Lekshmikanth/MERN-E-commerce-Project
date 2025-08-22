@@ -19,7 +19,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #bbb;
+    background-color: #FF9021;
     border-radius: 10px;
     border: 2px solid transparent;
     background-clip: content-box;
@@ -33,5 +33,5 @@ body {
 /* Firefox */
 * {
     scrollbar-width: thin;
-    scrollbar-color: #bbb transparent;
+    scrollbar-color: #FF9021 transparent;
 }

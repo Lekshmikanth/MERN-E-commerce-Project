@@ -5,9 +5,7 @@ import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import {
   Avatar,
   Badge,
-  IconButton,
-  useTheme,
-  alpha,
+  IconButton
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CartDrawer from '../Drawer/CartDrawer';
